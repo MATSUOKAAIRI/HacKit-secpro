@@ -1,0 +1,262 @@
+
+
+        /* ヘッダー全体のスタイル */
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* ← これが縦方向の中央揃えの要です */
+    padding: 15px 25px; /* 上下の余白を15px、左右を25pxに */
+    background-color: #fff; /* 背景色を白に */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 薄い影を追加 */
+    position: relative;
+}
+
+        /* 左側のサイト名 */
+        .site-header .logo {
+            font-size: 1.2em;
+            font-weight: bold;
+            /* Flexアイテムとしての幅の調整 */
+            flex: 1; 
+            text-align: left;
+        }
+
+        /* 中央のキャッチコピー */
+        .site-header .catchphrase {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+             /* Flexアイテムとしての幅の調整 */
+            flex: 2; /* 他より幅を広く取る */
+            text-align: center;
+        }
+
+    
+    /* 右：アクションエリア */
+.header-actions {
+    flex: 1; /* ヘッダー内での幅の割合 */
+    display: flex; /* ★中の要素（ボタンとメニュー）を横に並べる */
+    justify-content: flex-end; /* 全体を右に寄せる */
+    align-items: center; /* ★上下の位置を中央で揃える */
+    gap: 16px; /* ボタンとメニューの間の隙間 */
+}
+
+
+        /* ハンバーガーボタンのスタイル */
+        .hamburger-button {
+            width: 40px;
+            height: 40px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .hamburger-button .bar {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            display: block;
+        }
+
+        /* ハンバーガーメニュー（押した後に表示されるリスト）のスタイル */
+        .nav-menu {
+            display: none; /* 最初は隠しておく */
+            position: absolute;
+            top: 100%; /* ヘッダーの真下に表示 */
+            right: 50px; /* 右端から20pxの位置に */
+            background-color: #fff;
+            border: 1px solid #e7e7e7;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            z-index: 100;
+        }
+
+        /* is-activeクラスが付いたら表示する */
+        .nav-menu.is-active {
+            display: block;
+        }
+
+        .nav-menu li a {
+            display: block;
+            padding: 10px 30px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .nav-menu li a:hover {
+            background-color: #0ad1ec;
+        }
+
+        /* 丸い投稿ボタンのスタイル */
+.post-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    margin-right: 30px; /* ハンバーガーボタンとの余白（少し調整） */
+    /* margin-top: 20px; ← この行を削除します */
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+
+/* ベーススタイル */
+body {
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  background: #f5f8ff;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+main {
+  padding: 2em;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+footer {
+  text-align: center;
+  padding: 1em;
+  background: #e0ecff;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.ranking-title {
+  flex-shrink: 0; /* サイズを縮めすぎない */
+  font-size: 1.5rem;
+  color: #2c3e50; /* 好きな色で調整 */
+  font-weight: bold;
+}
+
+/* フィルターセレクト */
+.filter-controls {
+  padding: 1em;
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  top: 0;
+  z-index: 100;
+}
+
+.filter-controls select {
+  font-size: 1em;
+  padding: 0.5em;
+  border: 2px solid #d0e4ff;
+  border-radius: 10px;
+  background: #eef6ff;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.filter-controls select:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* ランキングセクション */
+.ranking h1 {
+  text-align: center;
+  font-size: 2em;
+  color: #2c3e50;
+  margin: 1em 0 1.5em;
+  background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+  padding: 0.5em 1em;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+/* 各投稿アイテム */
+.ranking-item {
+  display: flex;
+  align-items: flex-start;
+  background: #fff;
+  margin-bottom: 1.5em;
+  padding: 1em;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ranking-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.rank {
+  font-size: 2em;
+  font-weight: bold;
+  width: 2.5em;
+  text-align: center;
+  color: #e74c3c;
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.summary {
+  margin: 0 0 0.5em 0;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.category,
+.place {
+  display: inline-block;
+  background: #eef4fb;
+  color: #3498db;
+  border-radius: 5px;
+  padding: 2px 6px;
+  font-size: 0.9em;
+  margin-right: 0.5em;
+}
+
+.votes-container {
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* これで右寄せ */
+  gap: 0.5em;
+}
+
+.votes {
+  display: inline-block;
+  margin-top: 0.5em;
+  font-weight: bold;
+  color: black;
+}
+
+/* 共感ボタン */
+.empathy-btn {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ffcc00;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 0.5em;
+  cursor: pointer;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.95em;
+  transition: background-color 0.2s;
+}
+
+.empathy-btn:hover {
+  background-color: #ffd633;
+}
+
+.empathy-btn::before {
+  margin-right: 6px;
+}
