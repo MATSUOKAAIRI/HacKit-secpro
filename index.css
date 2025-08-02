@@ -1,0 +1,95 @@
+
+        /* CSSリセット（余計な余白をなくす） */
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        /* ヘッダー全体のスタイル */
+        .site-header {
+            display: flex;
+            justify-content: space-between; /* 両端に寄せて、中央の要素は中央に */
+            align-items: center; /* 上下の位置を中央揃えに */
+            padding: 10px 20px;
+            background-color: #07f42f;
+            position: relative; /* ハンバーガーメニューの位置の基準にする */
+        }
+
+        /* 左側のサイト名 */
+        .site-header .logo {
+            font-size: 1.2em;
+            font-weight: bold;
+            /* Flexアイテムとしての幅の調整 */
+            flex: 1; 
+            text-align: left;
+        }
+
+        /* 中央のキャッチコピー */
+        .site-header .catchphrase {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+             /* Flexアイテムとしての幅の調整 */
+            flex: 2; /* 他より幅を広く取る */
+            text-align: center;
+        }
+
+        /* 右側のハンバーガーメニューエリア */
+        .hamburger-menu-container {
+             /* Flexアイテムとしての幅の調整 */
+            flex: 1;
+            display: flex;
+            justify-content: flex-end; /* 右端に寄せる */
+        }
+
+        /* ハンバーガーボタンのスタイル */
+        .hamburger-button {
+            width: 40px;
+            height: 40px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        .hamburger-button .bar {
+            width: 100%;
+            height: 3px;
+            background-color: #333;
+            display: block;
+        }
+
+        /* ハンバーガーメニュー（押した後に表示されるリスト）のスタイル */
+        .nav-menu {
+            display: none; /* 最初は隠しておく */
+            position: absolute;
+            top: 100%; /* ヘッダーの真下に表示 */
+            right: 50px; /* 右端から20pxの位置に */
+            background-color: #fff;
+            border: 1px solid #e7e7e7;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            list-style: none;
+            padding: 10px 0;
+            margin: 0;
+            z-index: 100;
+        }
+
+        /* is-activeクラスが付いたら表示する */
+        .nav-menu.is-active {
+            display: block;
+        }
+
+        .nav-menu li a {
+            display: block;
+            padding: 10px 30px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .nav-menu li a:hover {
+            background-color: #0ad1ec;
+        }
+   

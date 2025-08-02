@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヘッダーのサンプル</title>
+                            <link rel="stylesheet"href="index.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="logo">KIT不満箱</div>
+
+        <h1 class="catchphrase">あなたの声が大学を変える！！</h1>
+
+        <div class="hamburger-menu-container">
+            <button class="hamburger-button" id="hamburger-button">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#">ホーム</a></li>
+                <li><a href="#">ランキング<a><li>
+            </ul>
+        </div>
+    </header>
+    <script>
+        // JavaScriptでハンバーガーメニューのクリックイベントを処理
+        const hamburgerButton = document.getElementById('hamburger-button');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburgerButton.addEventListener('click', () => {
+            // is-activeクラスを付けたり外したりする
+            navMenu.classList.toggle('is-active');
+        });
+    </script>
+
+</body>
+</html>
