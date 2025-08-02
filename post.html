@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ご意見フォーム</title>
+  <link rel="stylesheet"href="post.css">
+</head>
+<body>
+  <div class="form-wrapper">
+    <h1>ご意見フォーム</h1>
+    <form action="/submit" method="post">
+      
+      <div class="form-group">
+        <label for="type">意見の種類：</label>
+        <select id="type" name="type" required>
+          <option value="">選択してください</option>
+          <option value="施設">施設</option>
+          <option value="授業">授業</option>
+          <option value="人間関係">人間関係</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="building">号館：</label>
+        <select id="building" name="building" required>
+          <option value="">選択してください</option>
+          <option value="1号館">1号館</option>
+          <option value="2号館">2号館</option>
+          <option value="3号館">3号館</option>
+          <option value="5号館">5号館</option>
+          <option value="6号館">6号館</option>
+          <option value="6号館(LC)">6号館(LC)</option>
+          <option value="7号館">7号館</option>
+          <option value="8号館">8号館</option>
+          <option value="12号館">12号館</option>
+          <option value="21号館">21号館</option>
+          <option value="23号館">23号館</option>
+          <option value="24号館">24号館</option>
+          <option value="27号館">27号館</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="opinion">ご意見：</label>
+        <textarea id="opinion" name="opinion" rows="5" placeholder="ご自由にご記入ください" required></textarea>
+      </div>
+
+      <input type="submit" value="投稿">
+    </form>
+  </div>
+</body>
+</html>
