@@ -17,7 +17,7 @@ const transporter = nodemailer.createTransporter({
     service: 'gmail',
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -35,11 +35,11 @@ app.post('/api/send-reset-email', async (req, res) => {
         const userId = 'U' + Date.now();
         
         // リセットリンクを生成
-        const resetLink = `http://localhost:${PORT}/password-reset-confirm.html?email=${encodeURIComponent(email)}&user_id=${userId}&token=${resetToken}`;
+        const resetLink = `https://your-domain.pages.dev/password-reset-confirm.html?email=${encodeURIComponent(email)}&user_id=${userId}&token=${resetToken}`;
         
         // メール内容
         const mailOptions = {
-            from: process.env.EMAIL_USER || 'your-email@gmail.com',
+            from: process.env.EMAIL_USER,
             to: email,
             subject: 'HacKit Security - パスワードリセット',
             html: `
@@ -112,6 +112,21 @@ app.get('/api/email-config', (req, res) => {
 // ルートページ
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// 環境変数を安全にクライアントに提供するAPI
+app.get('/api/config', (req, res) => {
+    res.json({
+        firebase: {
+            apiKey: process.env.FIREBASE_API_KEY,
+            authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+            appId: process.env.FIREBASE_APP_ID,
+            measurementId: process.env.FIREBASE_MEASUREMENT_ID
+        }
+    });
 });
 
 // サーバー起動
