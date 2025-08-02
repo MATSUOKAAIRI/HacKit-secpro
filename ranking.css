@@ -64,7 +64,7 @@
         /* ハンバーガーメニュー（押した後に表示されるリスト）のスタイル */
         .nav-menu {
             display: none; /* 最初は隠しておく */
-            position: sticky;
+            position: absolute;
             top: 100%; /* ヘッダーの真下に表示 */
             right: 50px; /* 右端から20pxの位置に */
             background-color: #fff;
@@ -147,7 +147,6 @@ footer {
   display: flex;
   justify-content: center;
   gap: 1em;
-  position: sticky;
   top: 0;
   z-index: 100;
 }

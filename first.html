@@ -1,0 +1,215 @@
+<html>
+  <head>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Public+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <title>Stitch Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  </head>
+  <body>
+    <div
+      class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden"
+      style='--select-button-svg: url(&apos;data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(106,118,129)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e&apos;); font-family: "Public Sans", "Noto Sans", sans-serif;'
+    >
+      <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f1f2f4] px-10 py-3">
+          <div class="flex items-center gap-8">
+            <div class="flex items-center gap-4 text-[#121416]">
+              <div class="size-4">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor"></path>
+                </svg>
+              </div>
+              <h2 class="text-[#121416] text-lg font-bold leading-tight tracking-[-0.015em]">工大不満箱</h2>
+            </div>
+            <div class="flex items-center gap-9">
+              <a class="text-[#121416] text-sm font-medium leading-normal" href="#">キャンパスマップ</a>
+              <a class="text-[#121416] text-sm font-medium leading-normal" href="#">投稿</a>
+              <a class="text-[#121416] text-sm font-medium leading-normal" href="#">ランキング</a>
+            </div>
+          </div>
+          <div class="flex flex-1 justify-end gap-8">
+            <label class="flex flex-col min-w-40 !h-10 max-w-64">
+              <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+                <div
+                  class="text-[#6a7681] flex border-none bg-[#f1f2f4] items-center justify-center pl-4 rounded-l-xl border-r-0"
+                  data-icon="MagnifyingGlass"
+                  data-size="24px"
+                  data-weight="regular"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                    <path
+                      d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  placeholder="Search"
+                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#121416] focus:outline-0 focus:ring-0 border-none bg-[#f1f2f4] focus:border-none h-full placeholder:text-[#6a7681] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+                  value=""
+                />
+              </div>
+            </label>
+            <div
+              class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+              style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAfihMDelbc3-b5aVOfGebGAwnTGD3gUrTYWxERcb4kozXTCNYD7Xu5swUrTlFh0q--twl90c8ziH9u4b3DG4LCyws3nPTXh1ffvKayMx8ocrfwmDIVLxFlzwgU4RJxk_TaxX5yhZhDkWGhPO9iJ8Rlk2ngW113uR7ZmrfGvdappNTW6vO4a3W5_ZmJBMEX5OIcMAU0SLDJJge9mVlCMq-cug4rZk-gfTp1SRNkmu6VTfnuS-CS_tzAXbrJlOgh4Xo84FMyQMsqZ4Q");'
+            ></div>
+          </div>
+        </header>
+        <div class="px-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <div class="flex flex-wrap justify-between gap-3 p-4"><p class="text-[#121416] tracking-light text-[32px] font-bold leading-tight min-w-72">ランキング</p></div>
+            <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+              <label class="flex flex-col min-w-40 flex-1">
+                <select
+                  class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#121416] focus:outline-0 focus:ring-0 border border-[#dde1e3] bg-white focus:border-[#dde1e3] h-14 bg-[image:--select-button-svg] placeholder:text-[#6a7681] p-[15px] text-base font-normal leading-normal"
+                >
+                  <option value="one">場所を選択</option>
+                  <option value="two">二階</option>
+                  <option value="three">三階</option>
+                </select>
+              </label>
+            </div>
+            <div class="p-4">
+              <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                <div class="flex flex-[2_2_0px] flex-col gap-4">
+                  <div class="flex flex-col gap-1">
+                    <p class="text-[#121416] text-base font-bold leading-tight">いつでもこんでるからうざい！</p>
+                    <p class="text-[#6a7681] text-sm font-normal leading-normal">テスト前とか、込んでてすわれないよ！もっと席あったほうがいいよ！</p>
+                  </div>
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 flex-row-reverse bg-[#f1f2f4] text-[#121416] pr-2 gap-1 text-sm font-medium leading-normal w-fit"
+                  >
+                    <div class="text-[#121416]" data-icon="Heart" data-size="18px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <span class="truncate">123 いいね</span>
+                  </button>
+                </div>
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAOfxkIMP8WLo6ZHWC_EiVthSBV1RN6WRm6iGkuubuBFZWLdagXnDiYVvBtApyrqtlggS0nt9zR-ahpQSi1P_LPPDqAilb2oetpgojBjAlpCeQTylFPJyiu4gf6Jtecq3LVtW0JlHyGL6F4c-S0TqBT6O8nvl3Io6ZnDIaf9o7VyUQ-WH5D3084FgTO4FIdckc8VKIWa8q7Ny23SNi23Xz8-x2gRo5FPbviiO16_Q2YJ-FTgoeqG-3wlGl36FtpYlQ4V8-xemJIy0w");'
+                ></div>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                <div class="flex flex-[2_2_0px] flex-col gap-4">
+                  <div class="flex flex-col gap-1">
+                    <p class="text-[#121416] text-base font-bold leading-tight">うるさい！！</p>
+                    <p class="text-[#6a7681] text-sm font-normal leading-normal">みんながうるさくて集中できない！</p>
+                  </div>
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 flex-row-reverse bg-[#f1f2f4] text-[#121416] pr-2 gap-1 text-sm font-medium leading-normal w-fit"
+                  >
+                    <div class="text-[#121416]" data-icon="Heart" data-size="18px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <span class="truncate">87 いいね</span>
+                  </button>
+                </div>
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBpIsr8bCVddgdeE9ag8T0lyBezViEgGBJUackEdltFCy5C5aA1P2OrQsNOt5TGxiDE8DAGAix_o4CtyLkJSB8wK-yw3bnjY2xRkqBq6knRuPXLh_-GDBC5yz_yLHVpmAQEAzfNaVgX2JzUoGrQgvycQz7B6DkL_RUagmJpmWsgdn5VMujCa6GRkjFu2QtK1eopB55JYFn-CXh8Zgt6tC7mruUbcarnGkikxZVh05xvsTNd3cui1zMN-LLRnLvUObEYwii8kJxcKsU");'
+                ></div>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                <div class="flex flex-[2_2_0px] flex-col gap-4">
+                  <div class="flex flex-col gap-1">
+                    <p class="text-[#121416] text-base font-bold leading-tight">電源コンセントの不足</p>
+                    <p class="text-[#6a7681] text-sm font-normal leading-normal">コンセントが足りなくて充電ができない！</p>
+                  </div>
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 flex-row-reverse bg-[#f1f2f4] text-[#121416] pr-2 gap-1 text-sm font-medium leading-normal w-fit"
+                  >
+                    <div class="text-[#121416]" data-icon="Heart" data-size="18px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <span class="truncate">65 Likes</span>
+                  </button>
+                </div>
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCcgH5fT3QveSLao-eKgX-ICkK6c68y22_W7aQJYo_8cAHiXPSEwhy2lXduDFr42zZRxU1HkTo20evvArRjP04ghhkEIlFnauFh4YcQIyw44My5eBLqV6cg8E8kAeEo6L9SR_J_k4Sp1jg9z2N17WnVnT-eXt6TmFHwaTaN8HVbpeF8QJBEskNM5jcL_38RW7iow9LUsHaCilgHitEZALDH0NCl7jQ9-_Y6f9SvVaRRZmoo3iAMdM_rxfqNuZNaJlItq8FUF0c0xBM");'
+                ></div>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                <div class="flex flex-[2_2_0px] flex-col gap-4">
+                  <div class="flex flex-col gap-1">
+                    <p class="text-[#121416] text-base font-bold leading-tight">Uncomfortable chairs</p>
+                    <p class="text-[#6a7681] text-sm font-normal leading-normal">The chairs are not very comfortable, especially for long study sessions.</p>
+                  </div>
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 flex-row-reverse bg-[#f1f2f4] text-[#121416] pr-2 gap-1 text-sm font-medium leading-normal w-fit"
+                  >
+                    <div class="text-[#121416]" data-icon="Heart" data-size="18px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <span class="truncate">42 Likes</span>
+                  </button>
+                </div>
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAbyaHhle_2exc7syOWWtY-VOQqikzM-YR5Lqu1v7ceI1HNobhmgJaMafWHLWc_ngKaVL_qSoUIgJGmNNMfDjdtR0nky0SsKIZCgaUariqTnawFP6tOqaOilrvsqiKhyiuGg9rS_IiTUmGAKACUfl8BMugZenWPA9Gm38kvQLPCjbfJme7gfKXaTwedm7GgChh7CGeTR6ezK7PjJsYQ4JpsB49mxb8CWFEZMwszW9lkl-GiFspKYmFIT8ICm4p26YGXuu6GWHzNh-0");'
+                ></div>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="flex items-stretch justify-between gap-4 rounded-xl">
+                <div class="flex flex-[2_2_0px] flex-col gap-4">
+                  <div class="flex flex-col gap-1">
+                    <p class="text-[#121416] text-base font-bold leading-tight">Poor lighting</p>
+                    <p class="text-[#6a7681] text-sm font-normal leading-normal">The lighting in some areas is too dim, making it difficult to read.</p>
+                  </div>
+                  <button
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 flex-row-reverse bg-[#f1f2f4] text-[#121416] pr-2 gap-1 text-sm font-medium leading-normal w-fit"
+                  >
+                    <div class="text-[#121416]" data-icon="Heart" data-size="18px" data-weight="regular">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18px" height="18px" fill="currentColor" viewBox="0 0 256 256">
+                        <path
+                          d="M178,32c-20.65,0-38.73,8.88-50,23.89C116.73,40.88,98.65,32,78,32A62.07,62.07,0,0,0,16,94c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,220.66,240,164,240,94A62.07,62.07,0,0,0,178,32ZM128,206.8C109.74,196.16,32,147.69,32,94A46.06,46.06,0,0,1,78,48c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,147.61,146.24,196.15,128,206.8Z"
+                        ></path>
+                      </svg>
+                    </div>
+                    <span class="truncate">30 Likes</span>
+                  </button>
+                </div>
+                <div
+                  class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl flex-1"
+                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBdgUKpefwkRtjJYipAlIgqUYl1C1JAtIGAddkTOvWa5KqAGQzWNURP6b8kUuazJLhJINpk5K_qfTAey6pGLplJQwuvcpNB6zy5g_eDI4BsTHpV2EJg-U3HvtHNXwZl2i_h7m1A3ZrMeJzPI_aYtqDbLGi3RQSiR02YHDdABlIBKhNnCos4ngEFth7R6xa8HQw2oOfQ7CqbF3wgBHfdZxrScicr01ZrXSZYk525Tuwczo0PZjGJf95qzGIghcvlN2i7xuomvJZ4Z-s");'
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
