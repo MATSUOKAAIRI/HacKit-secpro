@@ -1,0 +1,65 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f9f9f9;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #2c3e50;
+  color: white;
+  padding: 1em;
+  text-align: center;
+}
+
+nav a {
+  color: #ecf0f1;
+  margin: 0 1em;
+  text-decoration: none;
+}
+
+main {
+  padding: 2em;
+}
+
+.ranking h2 {
+  text-align: center;
+  margin-bottom: 1em;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  background: white;
+  margin-bottom: 1em;
+  padding: 1em;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.rank {
+  font-size: 1.5em;
+  font-weight: bold;
+  width: 3em;
+  text-align: center;
+  color: #e74c3c;
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.summary {
+  margin: 0;
+  font-weight: bold;
+}
+
+.category {
+  color: #3498db;
+  margin-right: 1em;
+}
+
+.votes {
+  color: #2ecc71;
+  font-weight: bold;
+}
