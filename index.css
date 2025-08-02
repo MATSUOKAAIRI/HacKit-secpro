@@ -1,19 +1,14 @@
 
-        /* CSSリセット（余計な余白をなくす） */
-        body {
-            margin: 0;
-            font-family: sans-serif;
-        }
-
         /* ヘッダー全体のスタイル */
-        .site-header {
-            display: flex;
-            justify-content: space-between; /* 両端に寄せて、中央の要素は中央に */
-            align-items: center; /* 上下の位置を中央揃えに */
-            padding: 10px 20px;
-            background-color: #07f42f;
-            position: relative; /* ハンバーガーメニューの位置の基準にする */
-        }
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* ← これが縦方向の中央揃えの要です */
+    padding: 15px 25px; /* 上下の余白を15px、左右を25pxに */
+    background-color: #fff; /* 背景色を白に */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* 薄い影を追加 */
+    position: relative;
+}
 
         /* 左側のサイト名 */
         .site-header .logo {
@@ -34,13 +29,16 @@
             text-align: center;
         }
 
-        /* 右側のハンバーガーメニューエリア */
-        .hamburger-menu-container {
-             /* Flexアイテムとしての幅の調整 */
-            flex: 1;
-            display: flex;
-            justify-content: flex-end; /* 右端に寄せる */
-        }
+    
+    /* 右：アクションエリア */
+.header-actions {
+    flex: 1; /* ヘッダー内での幅の割合 */
+    display: flex; /* ★中の要素（ボタンとメニュー）を横に並べる */
+    justify-content: flex-end; /* 全体を右に寄せる */
+    align-items: center; /* ★上下の位置を中央で揃える */
+    gap: 16px; /* ボタンとメニューの間の隙間 */
+}
+
 
         /* ハンバーガーボタンのスタイル */
         .hamburger-button {
@@ -92,4 +90,21 @@
         .nav-menu li a:hover {
             background-color: #0ad1ec;
         }
-   
+
+        /* 丸い投稿ボタンのスタイル */
+.post-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    margin-right: 30px; /* ハンバーガーボタンとの余白（少し調整） */
+    /* margin-top: 20px; ← この行を削除します */
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}

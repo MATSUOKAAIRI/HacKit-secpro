@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ヘッダーのサンプル</title>
-                            <link rel="stylesheet"href="index.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
 
@@ -13,18 +13,25 @@
 
         <h1 class="catchphrase">あなたの声が大学を変える！！</h1>
 
-        <div class="hamburger-menu-container">
-            <button class="hamburger-button" id="hamburger-button">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="#">ホーム</a></li>
-                <li><a href="#">ランキング<a><li>
-            </ul>
+        <div class="header-actions">
+
+            <a href="post.html" class="post-button">投稿</a>
+            
+            <div class="hamburger-menu">
+                <button class="hamburger-button" id="hamburger-button">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#">ホーム</a></li>
+                    <li><a href="#">ランキング</a></li>
+                </ul>
+            </div>
+
         </div>
-    </header>
+        </header>
+
     <script>
         // JavaScriptでハンバーガーメニューのクリックイベントを処理
         const hamburgerButton = document.getElementById('hamburger-button');
