@@ -1,3 +1,5 @@
+import { onAuthStateChanged, signInWithEmailAndPassword, getErrorMessage } from './firebase-config.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
     const emailInput = document.getElementById('email');

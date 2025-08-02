@@ -1,4 +1,5 @@
-// 新規登録画面のJavaScript
+import { onAuthStateChanged, createUserWithEmailAndPassword, getErrorMessage } from './firebase-config.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.getElementById('signupForm');
     const emailInput = document.getElementById('email');
@@ -123,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('アカウントの作成に失敗しました。ネットワーク接続を確認してください。');
             } finally {
                 signupBtn.disabled = false;
-                signupBtn.textContent = '新規登録';
+                signupBtn.textContent = 'アカウント作成';
             }
         }
     });

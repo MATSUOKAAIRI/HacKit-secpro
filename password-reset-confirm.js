@@ -1,4 +1,5 @@
-// パスワードリセット確認画面のJavaScript
+import { confirmPasswordReset, getErrorMessage } from './firebase-config.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const newPasswordForm = document.getElementById('newPasswordForm');
     const newPasswordInput = document.getElementById('newPassword');
@@ -6,11 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const setPasswordBtn = document.getElementById('setPasswordBtn');
     const userInfoElement = document.getElementById('userInfo');
 
-    // エラー要素
     const newPasswordError = document.getElementById('newPasswordError');
     const confirmNewPasswordError = document.getElementById('confirmNewPasswordError');
 
-    // バリデーション関数
     function validatePassword(password) {
         return password.length >= 8;
     }
@@ -33,23 +32,19 @@ document.addEventListener('DOMContentLoaded', function() {
         errorElement.style.display = 'none';
     }
 
-    // URLパラメータからユーザー情報を取得
-    function getUserInfoFromURL() {
+    function getResetCodeFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('user_id');
+        const oobCode = urlParams.get('oobCode');
         const email = urlParams.get('email');
-        const token = urlParams.get('token');
         
-        return { userId, email, token };
+        return { oobCode, email };
     }
 
-    // ユーザー情報を表示
     function displayUserInfo(userInfo) {
         if (userInfo.email) {
             userInfoElement.innerHTML = `
                 <div class="user-details">
                     <p><strong>メールアドレス:</strong> ${userInfo.email}</p>
-                    <p><strong>ユーザーID:</strong> ${userInfo.userId || 'N/A'}</p>
                 </div>
             `;
         } else {
@@ -61,19 +56,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // ページ読み込み時にユーザー情報を表示
     window.addEventListener('load', function() {
-        const userInfo = getUserInfoFromURL();
+        const userInfo = getResetCodeFromURL();
         displayUserInfo(userInfo);
         
-        // トークンがない場合はエラー
-        if (!userInfo.token) {
+        if (!userInfo.oobCode) {
             alert('無効なリセットリンクです。パスワードリセットを再度実行してください。');
             window.location.href = 'password-reset.html';
         }
     });
 
-    // リアルタイムバリデーション
     newPasswordInput.addEventListener('input', function() {
         if (this.value && !validatePassword(this.value)) {
             showError(this, newPasswordError, 'パスワードは8文字以上で入力してください');
@@ -97,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // フォーム送信処理
     newPasswordForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -105,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const confirmNewPassword = confirmNewPasswordInput.value.trim();
         let isValid = true;
 
-        // バリデーション
         if (!newPassword) {
             showError(newPasswordInput, newPasswordError, '新しいパスワードを入力してください');
             isValid = false;
@@ -127,23 +117,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (isValid) {
-            // 設定ボタンを無効化
             setPasswordBtn.disabled = true;
             setPasswordBtn.textContent = '設定中...';
 
             try {
-                // Firebaseでパスワード設定
-                const result = await updatePassword(newPassword);
+                const userInfo = getResetCodeFromURL();
+                const result = await confirmPasswordReset(userInfo.oobCode, newPassword);
                 
                 if (result.success) {
-                    // 設定成功
-                    const userInfo = getUserInfoFromURL();
                     alert(`パスワードが正常に設定されました。\n\nユーザー: ${userInfo.email}\nログインページから新しいパスワードでログインしてください。`);
                     
-                    // ログインページにリダイレクト
                     window.location.href = 'login.html';
                 } else {
-                    // 設定失敗
                     const errorMessage = getErrorMessage(result.error);
                     alert('パスワード設定に失敗しました: ' + errorMessage);
                 }
