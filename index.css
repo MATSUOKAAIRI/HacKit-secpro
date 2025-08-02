@@ -108,3 +108,97 @@
     font-size: 14px;
     transition: background-color 0.2s;
 }
+
+/*main */
+/* === メインコンテンツのレイアウト === */
+.page-container {
+    display: flex;
+    flex-direction: column; /* ★要素を縦に並べる */
+    align-items: center;    /* ★要素を水平方向の中央に揃える */
+    padding: 40px;
+    gap: 32px; /* カテゴリとマップの間の隙間 */
+}
+
+/* === マップエリア === */
+.map-area {
+    position: relative;
+    max-width: 700px;
+    flex-shrink: 0;
+}
+
+.campus-map-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* === ハザードマップのデモ表示 === */
+.hazard-overlay {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.hazard-area-1 {
+    top: 25%;
+    left: 45%;
+    width: 200px;
+    height: 200px;
+    background-color: red;
+    filter: blur(25px);
+}
+
+.hazard-area-2 {
+    top: 60%;
+    left: 10%;
+    width: 150px;
+    height: 150px;
+    background-color: orange;
+    filter: blur(20px);
+}
+
+/* === カテゴリ選択エリア === */
+.category-filters {
+    display: flex;
+    flex-direction: row; /* ← 横に並べるように変更 */
+    justify-content: center; /* ボタンを中央に寄せる */
+    gap: 20px; /* ボタン同士の隙間 */
+}
+
+.category-button {
+    display: block;
+    padding: 15px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.category-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* カテゴリごとの色 */
+.cat-all {
+    background: linear-gradient(135deg, #ff4136, #ff7470);
+}
+
+.cat-facility {
+    background: linear-gradient(135deg, #ffdc00, #ffea61);
+    color: #333;
+}
+
+.cat-class {
+    background: linear-gradient(135deg, #2ecc40, #72d97e);
+}
+
+.cat-human {
+    background: linear-gradient(135deg, #0074d9, #54a0e3);
+}
