@@ -1,4 +1,5 @@
-// パスワード変更画面のJavaScript
+import { onAuthStateChanged, updatePassword, getErrorMessage } from './firebase-config.js';
+
 document.addEventListener('DOMContentLoaded', function() {
     const passwordForm = document.getElementById('passwordForm');
     const currentPasswordInput = document.getElementById('currentPassword');
@@ -128,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (result.success) {
                     alert('パスワードが正常に変更されました！');
                     passwordForm.reset();
-                    passwordStrength.style.display = 'none';
                 } else {
                     const errorMessage = getErrorMessage(result.error);
                     alert('パスワード変更に失敗しました: ' + errorMessage);
