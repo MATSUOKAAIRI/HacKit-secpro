@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await addDoc(collection(db, "opinion"), {
         text,
         category,
-        place: new Date()
+        place: place
       });
 // メッセージ表示
       alert("不満を受け付けたよ！");
