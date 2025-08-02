@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン - HacKit Security</title>
+    <link rel="stylesheet" href="login.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1>ログインする</h1>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">メールアドレス</label>
+                <input type="email" id="email" name="email" placeholder="c1234567@st.kanazawa-it.st.jp" required>
+                <div class="error-message" id="emailError">有効なメールアドレスを入力してください</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">パスワード</label>
+                <input type="password" id="password" name="password" placeholder="パスワードを入力" required>
+                <div class="error-message" id="passwordError">パスワードを入力してください</div>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                ログイン
+            </button>
+        </form>
+
+        <div class="forgot-password">
+            <a href="password-reset.html">パスワードを忘れた場合</a>
+        </div>
+
+        <div class="signup-link">
+            アカウントをお持ちでない方は <a href="signup.html">新規登録</a>
+        </div>
+    </div>
+
+    <!-- Firebase設定とログイン機能 -->
+    <script src="firebase-config.js"></script>
+    <script src="login.js"></script>
+</body>
+</html>
