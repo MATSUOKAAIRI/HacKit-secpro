@@ -29,11 +29,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // firebase-config.js から初期化済みの db をインポート
-import { db } from './firebase-config.js';
-import { collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+// import { db } from './firebase-config.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // --- DOM要素の取得 ---
 const categoryButtons = document.querySelectorAll('.category-filters .category-button');
+
+// db繋ぎこみ確認のため定義
+
+let db = null;
+
 
 /**
  * Firestoreからデータを取得し、スコアを計算してヒートマップを更新するメイン関数
@@ -41,37 +47,53 @@ const categoryButtons = document.querySelectorAll('.category-filters .category-b
  */
 async function updateHeatmap(category = 'all') {
     try {
-        // const locationsRef = collection(db, "opinion");
-        // console.log("test db!!!!!!!!")
-        // const querySnapshot = await getDocs(locationsRef);
+        // サーバーから環境変数を取得して設定を更新
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+            authDomain: "hackit-d394f.firebaseapp.com",
+            projectId: "hackit-d394f",
+            storageBucket: "hackit-d394f.firebasestorage.app",
+            messagingSenderId: "73269710558",
+            appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+            measurementId: "G-4MBQ6S9SDC"
+        };
 
-        const querySnapshot = await db.collection("opinion").get()
-        console.log(querySnapshot)
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        console.log(db)
+        const locationsRef = collection(db, "opinion");
+        const q = query(locationsRef);
+        
+        console.log(locationsRef)
+        console.log("test db!!!!!!!!")
+        const querySnapshot = await getDocs(q);
+        console.log("querySnapshot", querySnapshot)
+       
 
         const scores = [];
-       
-        querySnapshot.forEach(doc => {
-            const data = doc.data();
-            let opinionCount = 0;
-            let evalCount = 0;
+        const datas = [];
+    querySnapshot.forEach(doc => {
+        const data = doc.data();
+        datas.push(data); // 取り出したdataをdatas配列に追加
+    });
+    console.log("datas", datas)
+    
+    let opinionCount = 0;
+    let emphasisCount = 0;
 
-            // カテゴリに応じて使用するデータを切り替える
-            if (category === 'all') {
-                opinionCount = data.totalOpinions || 0;
-                evalCount = data.totalEvaluations || 0;
-            } else {
-                opinionCount = data.categoryOpinions?.[category] || 0;
-                evalCount = data.categoryEvaluations?.[category] || 0;
-            }
+    // dataが配列の場合
+    const opinions = Array.isArray(datas) ? datas : [];
+    opinionCount = opinions.length;
+    emphasisCount = opinions.reduce((sum, op) => sum + (op.empathy || 0), 0);
+    console.log("opinionCount", opinionCount);
+    console.log("emphasisCount", emphasisCount)
+    const score = opinionCount * emphasisCount;
+    scores.push({
+        locationId: querySnapshot.id,
+        score: score
+    });
 
-            // スコアを計算
-            const score = opinionCount * evalCount;
-            
-            scores.push({
-                locationId: doc.id, // "bldg21"など
-                score: score
-            });
-        });
+     
 
         // 計算したスコアを基に、ヒートマップの見た目を更新
         renderHeatmap(scores);
