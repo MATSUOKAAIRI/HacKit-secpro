@@ -10,11 +10,16 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo">
-            <h1>ログインする</h1>
-        </div>
+    <header class="site-header">
+        <div class="logo">KIT不満箱</div>
+        <h1 class="catchphrase">あなたの声が大学を変える！！</h1>      
+        <div class="header-actions"></div>
+    </header>
 
+    <div class="form-wrapper">
+        <div class="close-button" onclick="history.back()">×</div>
+        <h1>ログインする</h1>
+        
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">メールアドレス</label>
@@ -28,9 +33,7 @@
                 <div class="error-message" id="passwordError">パスワードを入力してください</div>
             </div>
 
-            <button type="submit" class="login-btn" id="loginBtn">
-                ログイン
-            </button>
+            <input type="submit" value="ログイン" class="login-btn" id="loginBtn">
         </form>
 
         <div class="forgot-password">
