@@ -1,6 +1,25 @@
 // Firebase Authentication関数をインポート
 import { onAuthStateChanged, getCurrentUser } from './firebase-config.js';
 
+// 投稿ボタンの状態を更新する関数
+function updatePostButtonForAuthState(user) {
+    const postButton = document.querySelector('.post-button');
+    
+    if (postButton) {
+        if (user) {
+            // ログイン済みの場合
+            postButton.textContent = '投稿';
+            postButton.style.opacity = '1';
+            postButton.style.pointerEvents = 'auto';
+        } else {
+            // 未ログインの場合
+            postButton.textContent = '投稿';
+            postButton.style.opacity = '1';
+            postButton.style.pointerEvents = 'auto';
+        }
+    }
+}
+
 // 投稿ボタンの制御
 async function setupPostButton() {
     const postButton = document.querySelector('.post-button');
@@ -17,6 +36,7 @@ async function setupPostButton() {
             if (!currentUser) {
                 e.preventDefault(); // デフォルトのリンク動作を停止
                 alert('ログインが必要です');
+                window.location.href = 'login.html';
                 return false;
             }
             

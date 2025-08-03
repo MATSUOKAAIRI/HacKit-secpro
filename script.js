@@ -8,21 +8,71 @@ let currentUser = null;
 
 // Firebase設定を直接設定
 function loadFirebaseConfig() {
-  // 環境変数から設定を取得
-  firebaseConfig = {
-    apiKey: window.FIREBASE_API_KEY,
-    authDomain: window.FIREBASE_AUTH_DOMAIN,
-    projectId: window.FIREBASE_PROJECT_ID,
-    storageBucket: window.FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
-    appId: window.FIREBASE_APP_ID,
-    measurementId: window.FIREBASE_MEASUREMENT_ID
-  };
+  // 環境変数の確認
+  console.log('script.js - Firebase環境変数の確認:');
+  console.log('FIREBASE_API_KEY:', window.FIREBASE_API_KEY ? '設定済み' : '未設定');
+  console.log('FIREBASE_AUTH_DOMAIN:', window.FIREBASE_AUTH_DOMAIN ? '設定済み' : '未設定');
+  console.log('FIREBASE_PROJECT_ID:', window.FIREBASE_PROJECT_ID ? '設定済み' : '未設定');
   
-  // 必須設定の検証
-  if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
-    throw new Error('Firebase設定が不完全です。環境変数を確認してください。');
+  // テンプレート変数がそのまま表示されているかチェック
+  const hasTemplateVariables = 
+    window.FIREBASE_API_KEY === '{{ FIREBASE_API_KEY }}' ||
+    window.FIREBASE_AUTH_DOMAIN === '{{ FIREBASE_AUTH_DOMAIN }}' ||
+    window.FIREBASE_PROJECT_ID === '{{ FIREBASE_PROJECT_ID }}';
+  
+  if (hasTemplateVariables) {
+    console.error('script.js - 環境変数がテンプレート変数のままです。Cloudflare Pagesで環境変数を設定してください。');
+    
+    // 開発環境用のフォールバック設定
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      console.warn('script.js - 開発環境のため、デフォルト設定を使用します');
+      firebaseConfig = {
+        apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+        authDomain: "hackit-d394f.firebaseapp.com",
+        projectId: "hackit-d394f",
+        storageBucket: "hackit-d394f.firebasestorage.app",
+        messagingSenderId: "73269710558",
+        appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+        measurementId: "G-4MBQ6S9SDC"
+      };
+    } else {
+      throw new Error('script.js - 環境変数が正しく設定されていません。Cloudflare Pagesで環境変数を設定してください。');
+    }
+  } else {
+    // 環境変数から設定を取得
+    firebaseConfig = {
+      apiKey: window.FIREBASE_API_KEY,
+      authDomain: window.FIREBASE_AUTH_DOMAIN,
+      projectId: window.FIREBASE_PROJECT_ID,
+      storageBucket: window.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
+      appId: window.FIREBASE_APP_ID,
+      measurementId: window.FIREBASE_MEASUREMENT_ID
+    };
+    
+    // 必須設定の検証
+    if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+      console.error('script.js - Firebase設定が不完全です。環境変数を確認してください。');
+      
+      // 開発環境用のフォールバック設定（本番環境では削除）
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.warn('script.js - 開発環境のため、デフォルト設定を使用します');
+        firebaseConfig = {
+          apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+          authDomain: "hackit-d394f.firebaseapp.com",
+          projectId: "hackit-d394f",
+          storageBucket: "hackit-d394f.firebasestorage.app",
+          messagingSenderId: "73269710558",
+          appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+          measurementId: "G-4MBQ6S9SDC"
+        };
+      } else {
+        throw new Error('script.js - Firebase設定が不完全です。環境変数を確認してください。');
+      }
+    }
   }
+  
+  console.log('script.js - Firebase設定:', firebaseConfig);
   
   // Firebaseを初期化
   const app = initializeApp(firebaseConfig);
@@ -50,11 +100,18 @@ async function initializeRankingApp() {
     
     // 認証状態の監視を開始
     try {
-      firebaseOnAuthStateChanged(auth, (user) => {
+      const authCallback = (user) => {
         currentUser = user;
         // ユーザー状態が変わったらランキングを再読み込み
         fetchRankings();
-      });
+      };
+      
+      // コールバック関数の検証
+      if (typeof authCallback === 'function') {
+        firebaseOnAuthStateChanged(auth, authCallback);
+      } else {
+        console.error('認証コールバックが関数ではありません');
+      }
     } catch (error) {
       console.error('認証状態の監視でエラーが発生しました:', error);
     }
