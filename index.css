@@ -39,6 +39,49 @@
     gap: 16px; /* ボタンとメニューの間の隙間 */
 }
 
+.user-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.user-email {
+    font-size: 0.9em;
+    color: #666;
+    font-weight: 500;
+}
+
+.user-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.password-change-link {
+    color: #007bff;
+    text-decoration: none;
+    padding: 10px 0;
+    transition: background-color 0.2s;
+}
+
+.password-change-link:hover {
+    background-color: #f8f9fa;
+}
+
+.logout-link {
+    color: #dc3545;
+    text-decoration: none;
+    padding: 10px 0;
+    cursor: pointer;
+    margin: 0;
+    transition: background-color 0.2s;
+}
+
+.logout-link:hover {
+    background-color: #f8f9fa;
+}
 
         /* ハンバーガーボタンのスタイル */
         .hamburger-button {

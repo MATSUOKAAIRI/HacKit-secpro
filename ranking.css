@@ -40,6 +40,49 @@
     gap: 16px; /* ボタンとメニューの間の隙間 */
 }
 
+.user-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.user-email {
+  font-size: 0.9em;
+  color: #666;
+  font-weight: 500;
+}
+
+.user-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.password-change-link {
+  color: #007bff;
+  text-decoration: none;
+  padding: 10px 0;
+  transition: background-color 0.2s;
+}
+
+.password-change-link:hover {
+  background-color: #f8f9fa;
+}
+
+.logout-link {
+  color: #dc3545;
+  text-decoration: none;
+  padding: 10px 0;
+  cursor: pointer;
+  margin: 0;
+  transition: background-color 0.2s;
+}
+
+.logout-link:hover {
+  background-color: #f8f9fa;
+}
 
         /* ハンバーガーボタンのスタイル */
         .hamburger-button {
@@ -259,4 +302,26 @@ footer {
 
 .empathy-btn::before {
   margin-right: 6px;
+}
+
+/* 無効化された共感ボタン */
+.empathy-btn.disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.empathy-btn.disabled:hover {
+  background-color: #ccc;
+}
+
+/* 共感済みのボタン */
+.empathy-btn.empathized {
+  background-color: #28a745;
+  color: white;
+  cursor: not-allowed;
+}
+
+.empathy-btn.empathized:hover {
+  background-color: #28a745;
 }

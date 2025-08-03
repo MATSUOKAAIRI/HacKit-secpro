@@ -1,6 +1,7 @@
 // Firebase SDKの読み込み（HTML側で読み込んでいる前提）
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js";
 
 // Firebase設定（自分のプロジェクトの設定に置き換えてください）
 const firebaseConfig = {
@@ -12,9 +13,18 @@ const firebaseConfig = {
   appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
   measurementId: "G-4MBQ6S9SDC"
 };
+
 // Firebase初期化
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+let currentUser = null;
+
+// 認証状態の監視
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+});
 
 // フォーム送信処理
 document.addEventListener("DOMContentLoaded", () => {
@@ -22,6 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // ログイン状態チェック
+    if (!currentUser) {
+      alert("ログインが必要です");
+      return;
+    }
 
     const category = document.getElementById("type").value;
     const place = document.getElementById("building").value;
@@ -31,7 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
       await addDoc(collection(db, "opinion"), {
         text,
         category,
-        place: place
+        place: place,
+        empathy: 0,
+        empathizedUsers: []
       });
 // メッセージ表示
       alert("不満を受け付けたよ！");
