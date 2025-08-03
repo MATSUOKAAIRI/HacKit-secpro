@@ -103,13 +103,16 @@ item.addEventListener("click", (e) => {
   details.innerText = data.details;
 
   // スタイルを付ける（ここでCSSでも可能）
-  details.style.margin = "1em 0";
-  details.style.padding = "1em";
+  details.style.marginTop = "0.75em";
+  details.style.padding = "0.8em";
   details.style.background = "#f9f9f9";
   details.style.borderRadius = "10px";
-  details.style.boxShadow = "0 0 10px rgba(0,0,0,0.08)";
-  details.style.lineHeight = "1.6";
+  details.style.boxShadow = "0 0 10px rgba(0,0,0,0.06)";
+  details.style.lineHeight = "1.5";
   details.style.whiteSpace = "pre-wrap";
+  details.style.width = "100%";
+  details.style.boxSizing = "border-box";
+  details.style.overflowWrap = "break-word";
 
   // .ranking-itemの直後に挿入
   item.insertAdjacentElement('beforeend', details);
