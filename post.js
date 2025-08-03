@@ -64,3 +64,43 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  if (!currentUser) {
+    alert("ログインが必要です");
+    return;
+  }
+
+  const category = document.getElementById("type").value;
+  const place = document.getElementById("building").value;
+  const titleInput = document.getElementById("title");
+  const title = titleInput.value.trim();
+  const details = document.getElementById("details").value.trim();
+
+  // タイトル文字数チェック
+  if (title.length > 25) {
+    alert("タイトルは25文字以内で入力してください。もう一度入力し直してください。");
+    titleInput.focus(); // タイトル欄にフォーカスを戻す
+    titleInput.select(); // 文字を選択状態にして再入力しやすくする
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "opinion"), {
+      title,
+      details,
+      category,
+      place,
+      empathy: 0
+    });
+
+    alert("ご意見を受け付けました！");
+    setTimeout(() => {
+      window.location.href = "index.html";
+    }, 2000);
+  } catch (error) {
+    console.error("送信エラー:", error);
+    alert("送信に失敗しました。もう一度お試しください。");
+  }
+});
