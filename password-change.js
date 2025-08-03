@@ -1,4 +1,4 @@
-import { onAuthStateChanged, updatePassword, getErrorMessage } from './firebase-config.js';
+import { authClient } from './auth-client.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const passwordForm = document.getElementById('passwordForm');
@@ -33,12 +33,17 @@ document.addEventListener('DOMContentLoaded', function() {
         errorElement.style.display = 'none';
     }
 
-    onAuthStateChanged(function(user) {
+    // 認証状態を確認
+    async function checkAuthState() {
+        const user = await authClient.getCurrentUser();
         if (!user) {
             alert('ログインが必要です');
             window.location.href = 'login.html';
         }
-    });
+    }
+
+    // ページ読み込み時に認証状態を確認
+    checkAuthState();
 
     currentPasswordInput.addEventListener('input', function() {
         if (this.value && this.value.length < 6) {
@@ -124,18 +129,31 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordBtn.textContent = '変更中...';
 
             try {
-                const result = await updatePassword(newPassword);
+                // Firebase Authを使用してパスワードを更新
+                const { updatePassword } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
                 
-                if (result.success) {
-                    alert('パスワードが正常に変更されました！');
-                    passwordForm.reset();
-                } else {
-                    const errorMessage = getErrorMessage(result.error);
-                    alert('パスワード変更に失敗しました: ' + errorMessage);
+                await authClient.initializeFirebase();
+                const user = authClient.auth.currentUser;
+                
+                if (!user) {
+                    throw new Error('ユーザーが認証されていません');
                 }
+                
+                await updatePassword(user, newPassword);
+                alert('パスワードが正常に変更されました！');
+                passwordForm.reset();
+                
             } catch (error) {
                 console.error('パスワード変更エラー:', error);
-                alert('パスワード変更に失敗しました。ネットワーク接続を確認してください。');
+                let errorMessage = 'パスワード変更に失敗しました';
+                
+                if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = 'セキュリティのため、再ログインが必要です';
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = 'パスワードが弱すぎます';
+                }
+                
+                alert(errorMessage);
             } finally {
                 passwordBtn.disabled = false;
                 passwordBtn.textContent = 'パスワード変更';

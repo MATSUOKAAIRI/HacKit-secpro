@@ -1,25 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-// Firestoreの更新に必要
-import {
-  doc,
-  updateDoc,
-  increment
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-  authDomain: "hackit-d394f.firebaseapp.com",
-  projectId: "hackit-d394f",
-  storageBucket: "hackit-d394f.firebasestorage.app",
-  messagingSenderId: "73269710558",
-  appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-  measurementId: "G-4MBQ6S9SDC"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+import { authClient } from './auth-client.js';
 
 const rankingSection = document.querySelector(".ranking");
 
@@ -43,15 +22,24 @@ if (!placeFilter) {
 }
 
 async function fetchBuildingRankings(place) {
-  const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
-  const querySnapshot = await getDocs(q);
+  try {
+    // authClientを使用してFirestoreにアクセス
+    const result = await authClient.getPosts();
+    if (!result.success) {
+      console.error('投稿取得エラー:', result.error);
+      return;
+    }
+    
+    const posts = result.posts;
+    // 共感数でソート
+    posts.sort((a, b) => (b.empathy || 0) - (a.empathy || 0));
 
   let rank = 1;
   rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;
 
-querySnapshot.forEach((docSnapshot) => {
-  const data = docSnapshot.data();
-  const docId = docSnapshot.id;
+posts.forEach((post) => {
+  const data = post;
+  const docId = post.id;
 
   if (data.place !== place) return;
 
@@ -98,5 +86,8 @@ querySnapshot.forEach((docSnapshot) => {
 
   if (rank === 1) {
     rankingSection.innerHTML += `<p>この号館にはまだ投稿がありません。</p>`;
+  }
+  } catch (error) {
+    console.error('ランキング取得エラー:', error);
   }
 }
