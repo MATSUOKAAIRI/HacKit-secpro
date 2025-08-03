@@ -1,12 +1,28 @@
-export const firebaseConfig = {
-  apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-  authDomain: "hackit-d394f.firebaseapp.com",
-  projectId: "hackit-d394f",
-  storageBucket: "hackit-d394f.firebasestorage.app",
-  messagingSenderId: "73269710558",
-  appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-  measurementId: "G-4MBQ6S9SDC"
-};
+
+let firebaseConfig = null;
+
+async function loadFirebaseConfig() {
+  const response = await fetch('/api/config');
+  const config = await response.json();
+  
+  firebaseConfig = {
+    apiKey: config.firebase.apiKey,
+    authDomain: config.firebase.authDomain,
+    projectId: config.firebase.projectId,
+    storageBucket: config.firebase.storageBucket,
+    messagingSenderId: config.firebase.messagingSenderId,
+    appId: config.firebase.appId,
+    measurementId: config.firebase.measurementId
+  };
+  
+  // Firebaseを初期化
+  firebase.initializeApp(firebaseConfig);
+}
+
+// 設定を読み込んでからFirebaseを初期化
+loadFirebaseConfig();
+
+export { firebaseConfig };
 
 export function validateFirebaseConfig(config) {
   const requiredFields = ['apiKey', 'authDomain', 'projectId'];
@@ -18,7 +34,6 @@ export function validateFirebaseConfig(config) {
   return config;
 }
 
-firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 
 export function onAuthStateChanged(callback) {

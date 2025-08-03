@@ -2,30 +2,52 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc, increment, arrayUnion, arrayRemove} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-  authDomain: "hackit-d394f.firebaseapp.com",
-  projectId: "hackit-d394f",
-  storageBucket: "hackit-d394f.firebasestorage.app",
-  messagingSenderId: "73269710558",
-  appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-  measurementId: "G-4MBQ6S9SDC"
-};
+let firebaseConfig = null;
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+// サーバーから環境変数を取得して設定を更新
+async function loadFirebaseConfig() {
+  const response = await fetch('/api/config');
+  const config = await response.json();
+  
+  firebaseConfig = {
+    apiKey: config.firebase.apiKey,
+    authDomain: config.firebase.authDomain,
+    projectId: config.firebase.projectId,
+    storageBucket: config.firebase.storageBucket,
+    messagingSenderId: config.firebase.messagingSenderId,
+    appId: config.firebase.appId,
+    measurementId: config.firebase.measurementId
+  };
+  
+  // Firebaseを初期化
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  
+  return { app, db, auth };
+}
 
 const rankingSection = document.querySelector(".ranking");
 
 let currentUser = null;
+let db = null;
+let auth = null;
 
 // 認証状態の監視
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-  // ユーザー状態が変わったらランキングを再読み込み
+async function initializeApp() {
+  const firebaseApp = await loadFirebaseConfig();
+  db = firebaseApp.db;
+  auth = firebaseApp.auth;
+  
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    // ユーザー状態が変わったらランキングを再読み込み
+    fetchRankings();
+  });
+  
+  // 初回読み込み
   fetchRankings();
-});
+}
 
 // 共感ボタンの状態を更新する関数
 function updateEmpathyButton(button, hasEmpathized, empathyCount) {
@@ -42,6 +64,8 @@ function updateEmpathyButton(button, hasEmpathized, empathyCount) {
 
 // ① fetchRankings関数の定義
 async function fetchRankings(categoryFilter = "", placeFilter = "") {
+  if (!db) return; // Firebaseが初期化されていない場合は何もしない
+  
   const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
   const querySnapshot = await getDocs(q);
 
@@ -143,5 +167,5 @@ document.getElementById("placeFilter").addEventListener("change", () => {
   fetchRankings(cat, place);
 });
 
-// 初回読み込み
-fetchRankings();
+// アプリケーションを初期化
+initializeApp();
