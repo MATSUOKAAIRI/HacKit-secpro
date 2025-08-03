@@ -76,6 +76,7 @@ async function updateHeatmap(category = 'all') {
         const data = doc.data();
         datas.push(data); // 取り出したdataをdatas配列に追加
     });
+
     console.log("datas", datas)
     
     let opinionCount = 0;
@@ -92,8 +93,72 @@ async function updateHeatmap(category = 'all') {
         locationId: querySnapshot.id,
         score: score
     });
+let one = 0; // 1号館カウント
+let two = 0; // 2号館カウント
+let three = 0; // 3号館カウント
+let five = 0; // 5号館カウント
+let six = 0; // 6号館カウント
+let osix = 0; // 6号館カウント
+let seven = 0; // 7号館カウント
+let eight = 0; // 8号館カウント
+let twelve = 0; // 12号館カウント
+let twntyone = 0; // 21号館カウント
+let twenythree = 0; // 23号館カウント
+let twentfour = 0; // 24号館カウント
+let twentysevwn = 0; // 27号館カウント
+let other = 0; // その他号館カウント
 
-     
+opinions.forEach(op => {
+    if (op.place === "1号館") {
+        one += 1;
+    } else if (op.place === "2号館") {
+        two += 1;
+    } else if (op.place === "2号館") {
+        two += 1;
+    } else if (op.place === "3号館") {
+        three  += 1;
+    }  else if (op.place === "5号館") { 
+        five += 1;
+    } else if (op.place === "6号館") {
+        six += 1;   
+    }
+    else if (op.place === "6号館") {
+        osix += 1;   
+    }
+    else if (op.place === "7号館") {
+        seven += 1;
+    } else if (op.place === "8号館") {
+        eight += 1;
+    } else if (op.place === "12号館") {
+        twelve += 1;
+    } else if (op.place === "21号館") {
+        twntyone += 1;
+    } else if (op.place === "23号館") {
+        twenythree += 1;
+    } else if (op.place === "24号館") {
+        twentfour += 1;
+    } else if (op.place === "27号館") {
+        twentysevwn += 1;
+    } else {
+        other += 1; // その他の場所
+    }
+});
+
+console.log("1号館の数:", one);
+console.log("2号館の数:", two);
+console.log("3号館の数:", three);
+console.log("5号館の数:", five);
+console.log("6号館の数:", six);
+console.log("6号館の数:", osix);
+console.log("7号館の数:", seven);
+console.log("8号館の数:", eight);
+console.log("12号館の数:", twelve);
+console.log("21号館の数:", twntyone);
+console.log("23号館の数:", twenythree);
+console.log("24号館の数:", twentfour);
+console.log("27号館の数:", twentysevwn);
+console.log("その他の数:", other);
+
 
         // 計算したスコアを基に、ヒートマップの見た目を更新
         renderHeatmap(scores);
@@ -102,6 +167,7 @@ async function updateHeatmap(category = 'all') {
         console.error("ヒートマップデータの取得に失敗しました:", error);
     }
 }
+
 
 /**
  * 計算されたスコアを基に、HTML要素のopacityを更新する関数
