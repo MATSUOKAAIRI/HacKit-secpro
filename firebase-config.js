@@ -9,17 +9,15 @@ let isInitialized = false;
 
 async function loadFirebaseConfig() {
   try {
-    const response = await fetch('/api/config');
-    const config = await response.json();
-    
+    // Cloudflare Pagesの環境変数を使用
     firebaseConfig = {
-      apiKey: config.firebase.apiKey,
-      authDomain: config.firebase.authDomain,
-      projectId: config.firebase.projectId,
-      storageBucket: config.firebase.storageBucket,
-      messagingSenderId: config.firebase.messagingSenderId,
-      appId: config.firebase.appId,
-      measurementId: config.firebase.measurementId
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "hackit-d394f.firebaseapp.com",
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "hackit-d394f",
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "hackit-d394f.firebasestorage.app",
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "73269710558",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-4MBQ6S9SDC"
     };
     
     // Firebaseを初期化
@@ -28,22 +26,6 @@ async function loadFirebaseConfig() {
     isInitialized = true;
   } catch (error) {
     console.error('Firebase設定の読み込みでエラーが発生しました:', error);
-    
-    // デフォルト設定を使用
-    firebaseConfig = {
-      apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-      authDomain: "hackit-d394f.firebaseapp.com",
-      projectId: "hackit-d394f",
-      storageBucket: "hackit-d394f.firebasestorage.app",
-      messagingSenderId: "73269710558",
-      appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-      measurementId: "G-4MBQ6S9SDC"
-    };
-    
-    // Firebaseを初期化
-    app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    isInitialized = true;
   }
 }
 
