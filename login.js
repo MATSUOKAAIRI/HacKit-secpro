@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const loginBtn = document.getElementById('loginBtn');
     const emailError = document.getElementById('emailError');
-    const passwordError = document.getElementById('passwordError');
 
     function validateEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,13 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    passwordInput.addEventListener('input', function() {
-        if (this.value && !validatePassword(this.value)) {
-            showError(this, passwordError, 'パスワードは6文字以上で入力してください');
-        } else {
-            hideError(this, passwordError);
-        }
-    });
 
     onAuthStateChanged(function(user) {
         if (user) {
