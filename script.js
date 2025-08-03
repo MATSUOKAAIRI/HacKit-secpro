@@ -6,32 +6,30 @@ let db = null;
 let auth = null;
 let currentUser = null;
 
-// サーバーから環境変数を取得して設定を更新
-async function loadFirebaseConfig() {
-  try {
-    const response = await fetch('/api/config');
-    const config = await response.json();
-    
-    firebaseConfig = {
-      apiKey: config.firebase.apiKey,
-      authDomain: config.firebase.authDomain,
-      projectId: config.firebase.projectId,
-      storageBucket: config.firebase.storageBucket,
-      messagingSenderId: config.firebase.messagingSenderId,
-      appId: config.firebase.appId,
-      measurementId: config.firebase.measurementId
-    };
-    
-    // Firebaseを初期化
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    
-    return { app, db, auth };
-  } catch (error) {
-    console.error('Firebase設定の読み込みでエラーが発生しました:', error);
-    throw error;
+// Firebase設定を直接設定
+function loadFirebaseConfig() {
+  // 環境変数から設定を取得
+  firebaseConfig = {
+    apiKey: window.FIREBASE_API_KEY,
+    authDomain: window.FIREBASE_AUTH_DOMAIN,
+    projectId: window.FIREBASE_PROJECT_ID,
+    storageBucket: window.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
+    appId: window.FIREBASE_APP_ID,
+    measurementId: window.FIREBASE_MEASUREMENT_ID
+  };
+  
+  // 必須設定の検証
+  if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+    throw new Error('Firebase設定が不完全です。環境変数を確認してください。');
   }
+  
+  // Firebaseを初期化
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  
+  return { app, db, auth };
 }
 
 const rankingSection = document.querySelector(".ranking");
@@ -39,7 +37,7 @@ const rankingSection = document.querySelector(".ranking");
 // 認証状態の監視
 async function initializeRankingApp() {
   try {
-    const firebaseApp = await loadFirebaseConfig();
+    const firebaseApp = loadFirebaseConfig();
     db = firebaseApp.db;
     auth = firebaseApp.auth;
     
