@@ -1,86 +1,121 @@
-* {
+.site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.site-header .logo {
+    font-size: 1.2em;
+    font-weight: bold;
+    flex: 1; 
+    text-align: left;
+}
+
+.site-header .catchphrase {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    flex: 2;
+    text-align: center;
+}
+
+.header-actions {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 16px;
+}
+
+/* 画面中央配置 */
+body {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    min-height: 100vh;
+    font-family: "Segoe UI", sans-serif;
+    background-color: #f0f0f0;
+    height: 100vh;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    flex-direction: column;
 }
 
-.login-container, .signup-container, .password-container {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    padding: 40px;
-    width: 100%;
-    max-width: 400px;
+/* フォーム全体のスタイル */
+.form-wrapper {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    box-sizing: border-box;
+    margin: 50px auto;
     position: relative;
-    overflow: hidden;
 }
 
-.login-container::before, .signup-container::before, .password-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-}
-
-.logo {
+h1 {
     text-align: center;
-    margin-bottom: 30px;
-}
-
-.logo h1 {
+    margin-bottom: 25px;
+    font-size: 24px;
     color: #333;
-    font-size: 28px;
-    font-weight: 700;
-    margin-bottom: 5px;
 }
 
-.logo p {
-    color: #666;
-    font-size: 14px;
-}
-
+/* ラベルと入力欄を縦に並べる */
 .form-group {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
-.form-group label {
-    display: block;
+label {
+    font-weight: bold;
     margin-bottom: 8px;
-    color: #333;
-    font-weight: 500;
-    font-size: 14px;
+    color: #444;
 }
 
-.form-group input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e1e5e9;
-    border-radius: 10px;
+select,
+textarea,
+input[type="email"],
+input[type="password"],
+input[type="submit"] {
+    padding: 10px;
     font-size: 16px;
-    transition: all 0.3s ease;
-    background: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    width: 100%;
 }
 
-.form-group input:focus {
-    outline: none;
-    border-color: #000;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+textarea {
+    resize: vertical;
 }
 
-.form-group input.error {
-    border-color: #e74c3c;
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover {
+    color: #333;
 }
 
 .error-message {
@@ -88,35 +123,6 @@ body {
     font-size: 12px;
     margin-top: 5px;
     display: none;
-}
-
-.login-btn, .signup-btn, .password-btn {
-    width: 100%;
-    padding: 15px;
-    background: #000;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 10px;
-}
-
-.login-btn:hover, .signup-btn:hover, .password-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-}
-
-.login-btn:active, .signup-btn:active, .password-btn:active {
-    transform: translateY(0);
-}
-
-.login-btn:disabled, .signup-btn:disabled, .password-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
 }
 
 .forgot-password {
@@ -135,110 +141,31 @@ body {
     color: #000;
 }
 
-.divider {
-    margin: 30px 0;
-    text-align: center;
-    position: relative;
-}
-
-.divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #e1e5e9;
-}
-
-.divider span {
-    background: white;
-    padding: 0 15px;
-    color: #666;
-    font-size: 14px;
-}
-
-.social-login {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.social-btn {
-    flex: 1;
-    padding: 12px;
-    border: 2px solid #e1e5e9;
-    border-radius: 8px;
-    background: white;
-    color: #333;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.social-btn:hover {
-    border-color: #000;
-    background: #f8f9fa;
-}
-
-.signup-link, .login-link {
+.signup-link {
     text-align: center;
     margin-top: 30px;
     color: #666;
     font-size: 14px;
 }
 
-.signup-link a, .login-link a {
+.signup-link a {
     color: #000;
     text-decoration: none;
     font-weight: 600;
 }
 
-.signup-link a:hover, .login-link a:hover {
+.signup-link a:hover {
     color: #000;
 }
 
-.password-strength {
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    display: none;
-}
-
-.password-strength.weak {
-    background: #ffe6e6;
-    color: #d63031;
-    border: 1px solid #fab1a0;
-}
-
-.password-strength.medium {
-    background: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
-}
-
-.password-strength.strong {
-    background: #d4edda;
-    color: #155724;
-    border: 1px solid #55a3ff;
-}
-
 @media (max-width: 480px) {
-    .login-container, .signup-container, .password-container {
+    .form-wrapper {
         padding: 30px 20px;
         margin: 10px;
+        width: 90%;
     }
 
-    .logo h1 {
-        font-size: 24px;
-    }
-
-    .social-login {
-        flex-direction: column;
+    h1 {
+        font-size: 20px;
     }
 }
