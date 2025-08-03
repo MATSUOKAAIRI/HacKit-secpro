@@ -1,4 +1,4 @@
-import { confirmPasswordReset, getErrorMessage } from './firebase-config.js';
+import { authClient } from './auth-client.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const newPasswordForm = document.getElementById('newPasswordForm');
@@ -121,17 +121,18 @@ document.addEventListener('DOMContentLoaded', function() {
             setPasswordBtn.textContent = '設定中...';
 
             try {
-                const userInfo = getResetCodeFromURL();
-                const result = await confirmPasswordReset(userInfo.oobCode, newPassword);
+                // Firebaseを初期化
+                await authClient.initializeFirebase();
                 
-                if (result.success) {
-                    alert(`パスワードが正常に設定されました。\n\nユーザー: ${userInfo.email}\nログインページから新しいパスワードでログインしてください。`);
-                    
-                    window.location.href = 'login.html';
-                } else {
-                    const errorMessage = getErrorMessage(result.error);
-                    alert('パスワード設定に失敗しました: ' + errorMessage);
-                }
+                const userInfo = getResetCodeFromURL();
+                
+                // パスワードリセットを確認
+                const { confirmPasswordReset } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+                
+                await confirmPasswordReset(authClient.auth, userInfo.oobCode, newPassword);
+                alert(`パスワードが正常に設定されました。\n\nユーザー: ${userInfo.email}\nログインページから新しいパスワードでログインしてください。`);
+                
+                window.location.href = 'login.html';
             } catch (error) {
                 console.error('パスワード設定エラー:', error);
                 alert('パスワード設定に失敗しました。ネットワーク接続を確認してください。');

@@ -8,11 +8,18 @@ class AuthClient {
     this.auth = null;
     this.app = null;
     this.db = null;
+    this.isInitialized = false;
   }
 
   // Firebase初期化
   async initializeFirebase() {
     try {
+      // 既に初期化されている場合は何もしない
+      if (this.isInitialized && this.auth && this.db) {
+        console.log('Firebaseは既に初期化されています');
+        return;
+      }
+      
       // Firebase設定を取得
       const config = await this.getFirebaseConfig();
       
@@ -34,7 +41,8 @@ class AuthClient {
       
       this.auth = getAuth(this.app);
       this.db = getFirestore(this.app);
-      console.log('✅ Firebase認証とFirestoreが初期化されました');
+      this.isInitialized = true;
+      console.log('Firebase認証とFirestoreが初期化されました');
       
     } catch (error) {
       console.error('Firebase初期化エラー:', error);
@@ -344,6 +352,7 @@ class AuthStateManager {
   constructor() {
     this.listeners = [];
     this.currentUser = null;
+    this.isInitialized = false;
   }
 
   // リスナーを追加
@@ -364,9 +373,32 @@ class AuthStateManager {
 
   // 認証状態をチェック
   async checkAuthState() {
-    const user = await authClient.getCurrentUser();
-    this.updateAuthState(user);
-    return user;
+    try {
+      const user = await authClient.getCurrentUser();
+      this.updateAuthState(user);
+      this.isInitialized = true;
+      return user;
+    } catch (error) {
+      console.error('認証状態チェックエラー:', error);
+      this.updateAuthState(null);
+      return null;
+    }
+  }
+
+  // 初期化完了を待機
+  async waitForInitialization() {
+    if (this.isInitialized) {
+      return this.currentUser;
+    }
+    
+    return new Promise((resolve) => {
+      const checkInterval = setInterval(async () => {
+        if (this.isInitialized) {
+          clearInterval(checkInterval);
+          resolve(this.currentUser);
+        }
+      }, 100);
+    });
   }
 }
 

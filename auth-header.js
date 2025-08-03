@@ -85,17 +85,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         console.log('ヘッダー認証状態監視を開始...');
         
-        // Firebaseを初期化
-        await authClient.initializeFirebase();
+        // Firebase初期化は他のスクリプトで行われるため、ここではスキップ
         
-        // 認証状態の変更を監視（リアルタイムではなく、初期化時のみ）
+        // 認証状態の変更を監視
         authStateManager.addListener(function(user) {
             console.log('ヘッダー認証状態変更:', user ? 'ログイン済み' : '未ログイン');
             handleAuthStateChange(user);
         });
         
         // 初期状態を設定
-        const currentUser = await authClient.getCurrentUser();
+        const currentUser = await authStateManager.waitForInitialization();
         console.log('ヘッダー初期ユーザー:', currentUser);
         handleAuthStateChange(currentUser);
         

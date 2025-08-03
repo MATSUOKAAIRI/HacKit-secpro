@@ -1,4 +1,4 @@
-import { onAuthStateChanged, createUserWithEmailAndPassword, getErrorMessage } from './firebase-config.js';
+import { authClient, authStateManager } from './auth-client.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const signupForm = document.getElementById('signupForm');
@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    onAuthStateChanged(function(user) {
+    // 認証状態の監視
+    authStateManager.addListener(function(user) {
         if (user) {
             window.location.href = 'index.html';
         }
@@ -110,14 +111,15 @@ document.addEventListener('DOMContentLoaded', function() {
             signupBtn.textContent = '登録中...';
 
             try {
-                const result = await createUserWithEmailAndPassword(email, password);
+                const result = await authClient.signup(email, password);
                 
                 if (result.success) {
                     alert('アカウントの作成に成功しました！');
+                    // 認証状態を更新
+                    authStateManager.updateAuthState(result.user);
                     window.location.href = 'login.html';
                 } else {
-                    const errorMessage = getErrorMessage(result.error);
-                    alert('アカウントの作成に失敗しました: ' + errorMessage);
+                    alert('アカウントの作成に失敗しました: ' + result.error);
                 }
             } catch (error) {
                 console.error('登録エラー:', error);

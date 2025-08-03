@@ -1,74 +1,13 @@
-import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc, increment, arrayUnion, arrayRemove} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { onAuthStateChanged as firebaseOnAuthStateChanged, getCurrentUser, initializeApp, getAuth } from './firebase-config.js';
+import { authClient, authStateManager } from './auth-client.js';
 
-let firebaseConfig = null;
-let db = null;
-let auth = null;
 let currentUser = null;
 
-// Firebase設定を直接設定
-function loadFirebaseConfig() {
-  // 環境変数の確認
-  console.log('script.js - Firebase環境変数の確認:');
-  console.log('FIREBASE_API_KEY:', window.FIREBASE_API_KEY ? '設定済み' : '未設定');
-  console.log('FIREBASE_AUTH_DOMAIN:', window.FIREBASE_AUTH_DOMAIN ? '設定済み' : '未設定');
-  console.log('FIREBASE_PROJECT_ID:', window.FIREBASE_PROJECT_ID ? '設定済み' : '未設定');
-  
-  // テンプレート変数がそのまま表示されているかチェック
-  const hasTemplateVariables = 
-    window.FIREBASE_API_KEY === '{{ FIREBASE_API_KEY }}' ||
-    window.FIREBASE_AUTH_DOMAIN === '{{ FIREBASE_AUTH_DOMAIN }}' ||
-    window.FIREBASE_PROJECT_ID === '{{ FIREBASE_PROJECT_ID }}';
-  
-  if (hasTemplateVariables) {
-    console.warn('script.js - 環境変数がテンプレート変数のままです。デフォルト設定を使用します。');
-    
-    // 本番環境でもデフォルト設定を使用
-    firebaseConfig = {
-      apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-      authDomain: "hackit-d394f.firebaseapp.com",
-      projectId: "hackit-d394f",
-      storageBucket: "hackit-d394f.firebasestorage.app",
-      messagingSenderId: "73269710558",
-      appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-      measurementId: "G-4MBQ6S9SDC"
-    };
-  } else {
-    // 環境変数から設定を取得
-    firebaseConfig = {
-      apiKey: window.FIREBASE_API_KEY,
-      authDomain: window.FIREBASE_AUTH_DOMAIN,
-      projectId: window.FIREBASE_PROJECT_ID,
-      storageBucket: window.FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
-      appId: window.FIREBASE_APP_ID,
-      measurementId: window.FIREBASE_MEASUREMENT_ID
-    };
-    
-    // 必須設定の検証
-    if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
-      console.error('script.js - Firebase設定が不完全です。デフォルト設定を使用します。');
-      
-      firebaseConfig = {
-        apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-        authDomain: "hackit-d394f.firebaseapp.com",
-        projectId: "hackit-d394f",
-        storageBucket: "hackit-d394f.firebasestorage.app",
-        messagingSenderId: "73269710558",
-        appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-        measurementId: "G-4MBQ6S9SDC"
-      };
-    }
-  }
-  
-  console.log('script.js - Firebase設定:', firebaseConfig);
-  
-  // Firebaseを初期化
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  
-  return { app, db, auth };
+// 認証状態の監視を開始
+function initializeAuth() {
+  authStateManager.addListener((user) => {
+    currentUser = user;
+    console.log('script.js - 認証状態変更:', user ? `ログイン済み (${user.email})` : '未ログイン');
+  });
 }
 
 const rankingSection = document.querySelector(".ranking");
@@ -76,37 +15,21 @@ const rankingSection = document.querySelector(".ranking");
 // 認証状態の監視
 async function initializeRankingApp() {
   try {
-    const firebaseApp = loadFirebaseConfig();
-    db = firebaseApp.db;
-    auth = firebaseApp.auth;
+    // Firebase初期化は他のスクリプトで行われるため、ここではスキップ
+    
+    // 認証状態の監視を開始
+    initializeAuth();
     
     // 初期化が完了するまで少し待機
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // 現在のユーザーを取得
-    const initialUser = auth.currentUser;
+    const initialUser = await authClient.getCurrentUser();
     currentUser = initialUser;
     
-    // 認証状態の監視を開始
-    try {
-      const authCallback = (user) => {
-        currentUser = user;
-        // ユーザー状態が変わったらランキングを再読み込み
-        fetchRankings();
-      };
-      
-      // コールバック関数の検証
-      if (typeof authCallback === 'function') {
-        firebaseOnAuthStateChanged(auth, authCallback);
-      } else {
-        console.error('認証コールバックが関数ではありません');
-      }
-    } catch (error) {
-      console.error('認証状態の監視でエラーが発生しました:', error);
-    }
+    // ランキングを初期読み込み
+    fetchRankings();
     
-    // 初回読み込み
-    await fetchRankings();
   } catch (error) {
     console.error('アプリケーション初期化でエラーが発生しました:', error);
   }
@@ -127,27 +50,30 @@ function updateEmpathyButton(button, hasEmpathized, empathyCount) {
 
 // ① fetchRankings関数の定義
 async function fetchRankings(categoryFilter = "", placeFilter = "") {
-  if (!db) {
-    console.error('Firebaseが初期化されていません');
-    return;
-  }
-  
   if (!rankingSection) {
     console.error('rankingSection要素が見つかりません');
     return;
   }
   
   try {
-    const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
-    const querySnapshot = await getDocs(q);
+    // authClientを使用してFirestoreにアクセス
+    const result = await authClient.getPosts();
+    if (!result.success) {
+      console.error('投稿取得エラー:', result.error);
+      return;
+    }
+    
+    const posts = result.posts;
+    // 共感数でソート
+    posts.sort((a, b) => (b.empathy || 0) - (a.empathy || 0));
 
     rankingSection.innerHTML = ""; // ← 前の表示を消す
 
     let rank = 1;
     let displayedCount = 0;
     
-    querySnapshot.forEach((docSnapshot) => {
-      const data = docSnapshot.data();
+    posts.forEach((post) => {
+      const data = post;
       const empathizedUsers = data.empathizedUsers || []; // 共感したユーザーIDの配列
 
       // ② フィルター条件に合わないものはスキップ
@@ -170,7 +96,7 @@ async function fetchRankings(categoryFilter = "", placeFilter = "") {
     <span class="place">📍${data.place}</span>
     </div>
   <div class="votes-container">
-    <button class="empathy-btn" data-id="${docSnapshot.id}" ${!currentUser ? 'disabled' : ''}>
+    <button class="empathy-btn" data-id="${post.id}" ${!currentUser ? 'disabled' : ''}>
       ${!currentUser ? 'ログインが必要' : (hasEmpathized ? '共感済み' : '共感する')}
     </button>
     <span class="votes"><span class="empathy-count">${data.empathy}</span></span>

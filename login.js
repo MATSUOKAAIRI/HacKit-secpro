@@ -1,4 +1,4 @@
-import { onAuthStateChanged, signInWithEmailAndPassword, getErrorMessage } from './firebase-config.js';
+import { authClient, authStateManager } from './auth-client.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
@@ -31,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-
-    onAuthStateChanged(function(user) {
+    // 認証状態の監視
+    authStateManager.addListener(function(user) {
         if (user) {
             window.location.href = 'index.html';
         }
@@ -67,14 +67,15 @@ document.addEventListener('DOMContentLoaded', function() {
             loginBtn.textContent = 'ログイン中...';
 
             try {
-                const result = await signInWithEmailAndPassword(email, password);
+                const result = await authClient.login(email, password);
                 
                 if (result.success) {
                     alert('ログインに成功しました！');
+                    // 認証状態を更新
+                    authStateManager.updateAuthState(result.user);
                     window.location.href = 'index.html';
                 } else {
-                    const errorMessage = getErrorMessage(result.error);
-                    alert('ログインに失敗しました: ' + errorMessage);
+                    alert('ログインに失敗しました: ' + result.error);
                 }
             } catch (error) {
                 console.error('ログインエラー:', error);
