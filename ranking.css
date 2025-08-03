@@ -181,7 +181,7 @@ footer {
 /* 各投稿アイテム */
 .ranking-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   background: #fff;
   margin-bottom: 1.5em;
   padding: 1em;
@@ -196,12 +196,12 @@ footer {
 }
 
 .rank {
-  font-size: 2em;
+  font-size: 1.5rem;
   font-weight: bold;
-  width: 2.5em;
-  text-align: center;
-  color: #e74c3c;
+  color: #d64545;
+  margin-right: 1rem;
 }
+
 
 .content {
   flex-grow: 1;
@@ -233,7 +233,8 @@ footer {
 
 .votes {
   display: inline-block;
-  margin-top: 0.5em;
+  width: 2.5em; /* 0000 が入るくらいの固定幅 */
+  text-align: right; /* 数字を右寄せ */
   font-weight: bold;
   color: black;
 }
@@ -245,7 +246,6 @@ footer {
   background-color: #ffcc00;
   border: none;
   padding: 6px 12px;
-  margin-top: 0.5em;
   cursor: pointer;
   border-radius: 8px;
   font-weight: bold;
