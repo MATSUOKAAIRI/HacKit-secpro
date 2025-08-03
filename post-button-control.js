@@ -2,7 +2,7 @@
 import { onAuthStateChanged, getCurrentUser } from './firebase-config.js';
 
 // 投稿ボタンの制御
-function setupPostButton() {
+async function setupPostButton() {
     const postButton = document.querySelector('.post-button');
     
     if (postButton) {
@@ -10,9 +10,9 @@ function setupPostButton() {
         const newPostButton = postButton.cloneNode(true);
         postButton.parentNode.replaceChild(newPostButton, postButton);
         
-        newPostButton.addEventListener('click', function(e) {
+        newPostButton.addEventListener('click', async function(e) {
             // 現在のユーザーを取得
-            const currentUser = getCurrentUser();
+            const currentUser = await getCurrentUser();
             
             if (!currentUser) {
                 e.preventDefault(); // デフォルトのリンク動作を停止
@@ -27,7 +27,16 @@ function setupPostButton() {
 }
 
 // ページ読み込み時に投稿ボタンを設定
-document.addEventListener('DOMContentLoaded', function() {
-    // 初期設定のみ実行（認証状態の変更時には再設定しない）
-    setupPostButton();
+document.addEventListener('DOMContentLoaded', async function() {
+    // 認証状態の変更を監視
+    await onAuthStateChanged(function(user) {
+        updatePostButtonForAuthState(user);
+    });
+    
+    // 初期設定
+    await setupPostButton();
+    
+    // 初期状態を設定
+    const currentUser = await getCurrentUser();
+    updatePostButtonForAuthState(currentUser);
 }); 
