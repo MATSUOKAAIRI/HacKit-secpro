@@ -21,49 +21,50 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const rankingSection = document.querySelector(".ranking");
+const rankingSection = document.querySelector(".ranking");//rankingのclassにrankingSectionという変数を置く-----
 
-// ページのクエリパラメータから「place」を取得
+// ページのクエリパラメータから「place」を取得----------------------------
 const urlParams = new URLSearchParams(window.location.search);
 const placeFilter = urlParams.get("place");
 
-// place が指定されていない場合は何もしない
+
 const getEmpathizedIds = () =>
-  JSON.parse(localStorage.getItem("empathizedIds") || "[]");
+  JSON.parse(localStorage.getItem("empathizedIds") || "[]");//共感済みかどうか
 
 const addEmpathizedId = (id) => {
   const ids = getEmpathizedIds();
   ids.push(id);
   localStorage.setItem("empathizedIds", JSON.stringify(ids));
-};
+};//共感ボタンの管理
 if (!placeFilter) {
   rankingSection.innerHTML = "<p>号館が指定されていません。</p>";
 } else {
   fetchBuildingRankings(placeFilter);
-}
+}//placeFilterのチェック------------------------------------------------
 
 async function fetchBuildingRankings(place) {
   const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
-  const querySnapshot = await getDocs(q);
+  const querySnapshot = await getDocs(q);//クエリを作っている-----------------------
 
-  let rank = 1;
-  rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;
+  let rank = 1;//順位を付ける最後のrank++で順番にランクづけられてる----------------
+  rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;//rankingにh2を書く
 
 querySnapshot.forEach((docSnapshot) => {
   const data = docSnapshot.data();
   const docId = docSnapshot.id;
 
-  if (data.place !== place) return;
+  if (data.place !== place) return;//あってなければスキップ---
 
-  const isEmpathized = getEmpathizedIds().includes(docId);
+  const isEmpathized = getEmpathizedIds().includes(docId);//共感済みかどうか
 
   const item = document.createElement("div");
   item.className = "ranking-item";
   item.innerHTML = `
     <span class="rank">${rank}位</span>
     <div class="content">
-      <p class="summary">${data.text}</p>
+      <p class="summary">${data.title}</p>
       <span class="category">#${data.category}</span>
+      <span class="place">📍${data.place}</span>
     </div>
     <div class="votes-container">
       <span class="votes"><span class="empathy-count">${data.empathy}</span></span>
@@ -72,9 +73,10 @@ querySnapshot.forEach((docSnapshot) => {
       </button>
     </div>
   `;
-
+/*
   const button = item.querySelector(".empathy-btn");
 
+  
   if (!isEmpathized) {
     button.addEventListener("click", async () => {
       const ref = doc(db, "opinion", docId);
@@ -89,7 +91,7 @@ querySnapshot.forEach((docSnapshot) => {
       button.classList.add("empathized");
       addEmpathizedId(docId);
     });
-  }
+  }*/
 
   rankingSection.appendChild(item);
   rank++;

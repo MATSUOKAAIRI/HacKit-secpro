@@ -18,6 +18,23 @@ const auth = getAuth(app);
 
 const rankingSection = document.querySelector(".ranking");
 
+// ページのクエリパラメータから「place」を取得----------------------------
+const urlParams = new URLSearchParams(window.location.search);
+const placeFilter = urlParams.get("place");
+
+if (!placeFilter) {
+  rankingSection.innerHTML = "<p>号館が指定されていません。</p>";
+} else {
+  fetchBuildingRankings(placeFilter);
+}//placeFilterのチェック------
+
+async function fetchBuildingRankings(place) {
+  const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
+  const querySnapshot = await getDocs(q);//クエリを作っている---------------
+
+    rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;//rankingにh2を書く
+
+
 let currentUser = null;
 
 // 認証状態の監視
@@ -41,20 +58,20 @@ function updateEmpathyButton(button, hasEmpathized, empathyCount) {
 }
 
 // ① fetchRankings関数の定義
-async function fetchRankings(categoryFilter = "", placeFilter = "") {
+async function fetchRankings(categoryFilter = "") {
   const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
   const querySnapshot = await getDocs(q);
 
-  rankingSection.innerHTML = ""; // ← 前の表示を消す
 
   let rank = 1;
   querySnapshot.forEach((docSnapshot) => {
     const data = docSnapshot.data();
     const empathizedUsers = data.empathizedUsers || []; // 共感したユーザーIDの配列
 
+        if (data.place !== place) return;//あってなければスキップ---
+
     // ② フィルター条件に合わないものはスキップ
-    if ((categoryFilter && data.category !== categoryFilter) ||
-        (placeFilter && data.place !== placeFilter)) {
+    if (categoryFilter && data.category !== categoryFilter) {
       return;
     }
 
@@ -170,6 +187,9 @@ item.addEventListener("click", (e) => {
 
     rank++;
   });
+    if (rank === 1) {
+    rankingSection.innerHTML += `<p>この号館にはまだ投稿がありません。</p>`;
+  }
 }
 
 // ③ セレクトボックスにイベントを付ける（fetchRankingsを呼ぶ）
@@ -184,6 +204,5 @@ document.getElementById("placeFilter").addEventListener("change", () => {
   const place = document.getElementById("placeFilter").value;
   fetchRankings(cat, place);
 });
+}
 
-// 初回読み込み
-fetchRankings();
