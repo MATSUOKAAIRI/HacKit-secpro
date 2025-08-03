@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ヘッダーのサンプル</title>
     <link rel="stylesheet" href="index.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -24,8 +26,11 @@
                     <span class="bar"></span>
                 </button>
                 <ul class="nav-menu" id="nav-menu">
-                    <li><a href="#">ホーム</a></li>
-                    <li><a href="#">ランキング</a></li>
+                    <li><a href="/">ホーム</a></li>
+                    <li><a href="/ranking.html">ランキング</a></li>
+                    <li id="auth-menu-item">
+                        <a href="/login.html" id="auth-link">ログイン</a>
+                    </li>
                 </ul>
             </div>
 
@@ -103,6 +108,12 @@
         </map>
 
     </main>
+
+    <!-- Firebase設定と認証機能 -->
+    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="auth-header.js"></script>
+    <script type="module" src="post-button-control.js"></script>
+    
     <script>
         // JavaScriptでハンバーガーメニューのクリックイベントを処理
         const hamburgerButton = document.getElementById('hamburger-button');

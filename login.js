@@ -13,10 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return emailRegex.test(email);
     }
 
-    function validatePassword(password) {
-        return password.length >= 6;
-    }
-
     function showError(input, errorElement, message) {
         input.classList.add('error');
         errorElement.textContent = message;
@@ -69,9 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!password) {
             showError(passwordInput, passwordError, 'パスワードを入力してください');
-            isValid = false;
-        } else if (!validatePassword(password)) {
-            showError(passwordInput, passwordError, 'パスワードは6文字以上で入力してください');
             isValid = false;
         } else {
             hideError(passwordInput, passwordError);

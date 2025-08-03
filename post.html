@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ご意見フォーム</title>
   <link rel="stylesheet"href="post.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 </head>
 <body>
   <div class="form-wrapper">
@@ -51,6 +54,9 @@
       <input type="submit" value="投稿">
     </form>
   </div>
+  
+  <!-- Firebase設定と認証機能 -->
+  <script type="module" src="firebase-config.js"></script>
   <script type="module" src="post.js"></script>
 </body>
 </html>
