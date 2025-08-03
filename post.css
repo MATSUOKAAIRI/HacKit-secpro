@@ -50,6 +50,18 @@
       box-sizing: border-box;
       width: 100%;
     }
+    input[type="text"],
+select,
+textarea,
+input[type="submit"] {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  width: 100%; /* 全て幅を揃える */
+}
+
 
     textarea {
       resize: vertical;
