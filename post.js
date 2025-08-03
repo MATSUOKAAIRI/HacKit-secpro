@@ -25,11 +25,12 @@ async function loadFirebaseConfig() {
   
   // Firebaseを初期化
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
+  const db = getFirestore(app);       // 追加
+  const auth = getAuth(app);           // 追加
   
   return { app, db, auth };
 }
+
 
 // 認証状態の監視
 async function initializePostApp() {
