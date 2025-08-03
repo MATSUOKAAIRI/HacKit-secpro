@@ -31,7 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
       await addDoc(collection(db, "opinion"), {
         text,
         category,
-        place: place
+        place: place,
+        empathy:0
       });
 // メッセージ表示
       alert("不満を受け付けたよ！");
@@ -46,3 +47,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
