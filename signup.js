@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const result = await createUserWithEmailAndPassword(email, password);
                 
                 if (result.success) {
-                    alert('アカウントの作成に成功しました！\nメールアドレスの確認をお願いします。');
+                    alert('アカウントの作成に成功しました！');
                     window.location.href = 'login.html';
                 } else {
                     const errorMessage = getErrorMessage(result.error);
