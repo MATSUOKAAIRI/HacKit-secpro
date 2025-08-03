@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ヘッダーのサンプル</title>
     <link rel="stylesheet" href="index.css">
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 </head>
 <body>
 
@@ -46,74 +44,51 @@
         </nav>
         
         <div class="map-area">
-            <img src="../map.png" alt="キャンパスマップ" class="campus-map-image" usemap="#campus-map">
+            <img src="/map.png" alt="キャンパスマップ" class="campus-map-image" usemap="#campus-map">
 
-            <div class="hazard-overlay hazard-area-1"></div>
-            <div class="hazard-overlay hazard-area-2"></div>
+            <div id="pin-bldg21" class="map-pin" style="top: 284px; left: 239px;"></div>
+            <div id="pin-bldg23" class="map-pin" style="top: 106px; left: 306px;"></div>
+            <div id="pin-bldg24" class="map-pin" style="top: 32px; left: 295px;"></div>
+            <div id="pin-bldg27" class="map-pin" style="top: 149px; left: 260px;"></div>
+            <div id="pin-bldg26" class="map-pin" style="top: 143px; left: 297px;"></div>
+            <div id="pin-bldg8" class="map-pin" style="top: 180px; left: 285px;"></div>
+            <div id="pin-bldg7" class="map-pin" style="top: 34px; left: 178px;"></div>
+            <div id="pin-bldg5" class="map-pin" style="top: 120px; left: 196px;"></div>
+            <div id="pin-bldg1" class="map-pin" style="top: 186px; left: 148px;"></div>
+            <div id="pin-bldg6-lc" class="map-pin" style="top: 44px; left: 89px;"></div>
+            <div id="pin-bldg6-hall" class="map-pin" style="top: 121px; left: 45px;"></div>
+            <div id="pin-bldg12" class="map-pin" style="top: 381px; left: 214px;"></div>
+            <div id="pin-bldg3" class="map-pin" style="top: 179px; left: 48px;"></div>
+            <div id="pin-bldg2" class="map-pin" style="top: 240px; left: 45px;"></div>
         </div>
 
         <map name="campus-map">
-            <area shape="rect" 
-                  coords="253, 227, 311, 267"
-                  href="building21.html" 
-                  title="21号館の不満を見る">
-            <area shape="rect" 
-                  coords="253, 80, 338, 125"
-                  href="building21.html" 
-                  title="23号館の不満を見る">
-            <area shape="rect" 
-                  coords="262, 20, 335, 60"
-                  href="building21.html" 
-                  title="24号館の不満を見る">
-            <area shape="rect" 
-                  coords="244, 127, 328, 153"
-                  href="building21.html" 
-                  title="27号館の不満を見る">
-            <area shape="rect" 
-                  coords="262, 161, 315, 225"
-                  href="building21.html" 
-                  title="8号館の不満を見る">
-            <area shape="rect" 
-                  coords="123, 20, 220, 57"
-                  href="building21.html" 
-                  title="7号館の不満を見る">
-            <area shape="rect" 
-                  coords="156, 86, 220, 154"
-                  href="building21.html" 
-                  title="5号館の不満を見る">
-            <area shape="rect" 
-                  coords="106, 172, 206, 224"
-                  href="building21.html" 
-                  title="1号館の不満を見る">
-            <area shape="rect" 
-                  coords="26,27, 116, 82"
-                  href="building21.html" 
-                  title="6号館/LCの不満を見る">
-            <area shape="rect" 
-                  coords="20, 102, 71, 158"
-                  href="building21.html" 
-                  title="6号館/ホールの不満を見る">
-            <area shape="rect" 
-                  coords="92, 323, 278, 420"
-                  href="building21.html" 
-                  title="12号館の不満を見る">
-            <area shape="rect" 
-                  coords="10, 168, 76, 218"
-                  href="building21.html" 
-                  title="3号館の不満を見る">
-            <area shape="rect" 
-                  coords="8, 225, 73, 263"
-                  href="building21.html" 
-                  title="2号館の不満を見る">
+            <area data-pin-id="pin-bldg21" shape="rect" coords="253, 227, 311, 267" href="building21.html" title="21号館の不満を見る">
+            <area data-pin-id="pin-bldg23" shape="rect" coords="253, 80, 338, 125" href="building23.html" title="23号館の不満を見る">
+            <area data-pin-id="pin-bldg24" shape="rect" coords="262, 20, 335, 60" href="building24.html" title="24号館の不満を見る">
+            <area data-pin-id="pin-bldg27" shape="rect" coords="244, 127, 275, 154" href="building27.html" title="27号館の不満を見る">
+            <area data-pin-id="pin-bldg26" shape="rect" coords="185, 130, 328, 153" href="building26.html" title="26号館の不満を見る">
+            <area data-pin-id="pin-bldg8" shape="rect" coords="262, 161, 315, 225" href="building8.html" title="8号館の不満を見る">
+            <area data-pin-id="pin-bldg7" shape="rect" coords="123, 20, 220, 57" href="building7.html" title="7号館の不満を見る">
+            <area data-pin-id="pin-bldg5" shape="rect" coords="156, 86, 220, 154" href="building5.html" title="5号館の不満を見る">
+            <area data-pin-id="pin-bldg1" shape="rect" coords="106, 172, 206, 224" href="building1.html" title="1号館の不満を見る">
+            <area data-pin-id="pin-bldg6-lc" shape="rect" coords="22, 26, 116, 77" href="building6-lc.html" title="6号館/LCの不満を見る">
+            <area data-pin-id="pin-bldg6-hall" shape="rect" coords="23, 101, 71, 154" href="building6-hall.html" title="6号館/ホールの不満を見る">
+            <area data-pin-id="pin-bldg12" shape="rect" coords="92, 323, 278, 420" href="building12.html" title="12号館の不満を見る">
+            <area data-pin-id="pin-bldg3" shape="rect" coords="10, 168, 76, 218" href="building3.html" title="3号館の不満を見る">
+            <area data-pin-id="pin-bldg2" shape="rect" coords="8, 225, 73, 263" href="building2.html" title="2号館の不満を見る">
         </map>
 
     </main>
-
+    
     <!-- Firebase設定と認証機能 -->
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="auth-header.js"></script>
     <script type="module" src="post-button-control.js"></script>
-    
+
+</html>
+    <script src="index.js" type="module"></script>
+
     <script>
         // JavaScriptでハンバーガーメニューのクリックイベントを処理
         const hamburgerButton = document.getElementById('hamburger-button');
