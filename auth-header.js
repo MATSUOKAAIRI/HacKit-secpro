@@ -49,14 +49,21 @@ function updateHeaderForAuthState(user) {
     }
 }
 
+
+// 認証状態が変更された時の処理
+function handleAuthStateChange(user) {
+    updateHeaderForAuthState(user);
+    updatePostButtonForAuthState(user);
+}
+
 // ページ読み込み時に認証状態を確認
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     // 認証状態の変更を監視
-    onAuthStateChanged(function(user) {
-        updateHeaderForAuthState(user);
+    await onAuthStateChanged(function(user) {
+        handleAuthStateChange(user);
     });
     
     // 初期状態を設定
-    const currentUser = getCurrentUser();
-    updateHeaderForAuthState(currentUser);
+    const currentUser = await getCurrentUser();
+    handleAuthStateChange(currentUser);
 }); 

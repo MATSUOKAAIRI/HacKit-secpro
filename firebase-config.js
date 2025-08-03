@@ -1,28 +1,56 @@
+// Firebase SDKを読み込み
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged as firebaseOnAuthStateChanged, createUserWithEmailAndPassword as firebaseCreateUser, signInWithEmailAndPassword as firebaseSignIn, updatePassword as firebaseUpdatePassword, sendPasswordResetEmail as firebaseSendPasswordResetEmail, confirmPasswordReset as firebaseConfirmPasswordReset, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 let firebaseConfig = null;
+let app = null;
+let auth = null;
+let isInitialized = false;
 
 async function loadFirebaseConfig() {
-  const response = await fetch('/api/config');
-  const config = await response.json();
-  
-  firebaseConfig = {
-    apiKey: config.firebase.apiKey,
-    authDomain: config.firebase.authDomain,
-    projectId: config.firebase.projectId,
-    storageBucket: config.firebase.storageBucket,
-    messagingSenderId: config.firebase.messagingSenderId,
-    appId: config.firebase.appId,
-    measurementId: config.firebase.measurementId
-  };
-  
-  // Firebaseを初期化
-  firebase.initializeApp(firebaseConfig);
+  try {
+    const response = await fetch('/api/config');
+    const config = await response.json();
+    
+    firebaseConfig = {
+      apiKey: config.firebase.apiKey,
+      authDomain: config.firebase.authDomain,
+      projectId: config.firebase.projectId,
+      storageBucket: config.firebase.storageBucket,
+      messagingSenderId: config.firebase.messagingSenderId,
+      appId: config.firebase.appId,
+      measurementId: config.firebase.measurementId
+    };
+    
+    // Firebaseを初期化
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    isInitialized = true;
+  } catch (error) {
+    console.error('Firebase設定の読み込みでエラーが発生しました:', error);
+    
+    // デフォルト設定を使用
+    firebaseConfig = {
+      apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+      authDomain: "hackit-d394f.firebaseapp.com",
+      projectId: "hackit-d394f",
+      storageBucket: "hackit-d394f.firebasestorage.app",
+      messagingSenderId: "73269710558",
+      appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+      measurementId: "G-4MBQ6S9SDC"
+    };
+    
+    // Firebaseを初期化
+    app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    isInitialized = true;
+  }
 }
 
 // 設定を読み込んでからFirebaseを初期化
 loadFirebaseConfig();
 
-export { firebaseConfig };
+export { firebaseConfig, initializeApp, getAuth };
 
 export function validateFirebaseConfig(config) {
   const requiredFields = ['apiKey', 'authDomain', 'projectId'];
@@ -34,15 +62,51 @@ export function validateFirebaseConfig(config) {
   return config;
 }
 
-const auth = firebase.auth();
+// 初期化完了を待つ関数
+async function waitForInitialization() {
+  while (!isInitialized) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+}
 
-export function onAuthStateChanged(callback) {
-  return auth.onAuthStateChanged(callback);
+export async function onAuthStateChanged(callback) {
+  await waitForInitialization();
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
+    return;
+  }
+  
+  // コールバック関数の検証
+  if (typeof callback !== 'function') {
+    console.error('onAuthStateChanged: callback must be a function');
+    return;
+  }
+  
+  try {
+    return firebaseOnAuthStateChanged(auth, callback);
+  } catch (error) {
+    console.error('認証状態の監視でエラーが発生しました:', error);
+    // エラーが発生した場合は、現在のユーザー状態を直接コールバックで通知
+    const currentUser = auth.currentUser;
+    if (typeof callback === 'function') {
+      callback(currentUser);
+    }
+    return null;
+  }
 }
 
 export async function createUserWithEmailAndPassword(email, password) {
+  await waitForInitialization();
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
+    return {
+      success: false,
+      error: 'auth/not-initialized'
+    };
+  }
+  
   try {
-    const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+    const userCredential = await firebaseCreateUser(auth, email, password);
     return {
       success: true,
       user: userCredential.user
@@ -56,8 +120,17 @@ export async function createUserWithEmailAndPassword(email, password) {
 }
 
 export async function signInWithEmailAndPassword(email, password) {
+  await waitForInitialization();
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
+    return {
+      success: false,
+      error: 'auth/not-initialized'
+    };
+  }
+  
   try {
-    const userCredential = await auth.signInWithEmailAndPassword(email, password);
+    const userCredential = await firebaseSignIn(auth, email, password);
     return {
       success: true,
       user: userCredential.user
@@ -71,6 +144,15 @@ export async function signInWithEmailAndPassword(email, password) {
 }
 
 export async function updatePassword(newPassword) {
+  await waitForInitialization();
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
+    return {
+      success: false,
+      error: 'auth/not-initialized'
+    };
+  }
+  
   try {
     const user = auth.currentUser;
     if (!user) {
@@ -79,7 +161,7 @@ export async function updatePassword(newPassword) {
         error: 'auth/user-not-found'
       };
     }
-    await user.updatePassword(newPassword);
+    await firebaseUpdatePassword(user, newPassword);
     return {
       success: true
     };
@@ -92,8 +174,17 @@ export async function updatePassword(newPassword) {
 }
 
 export async function sendPasswordResetEmail(email) {
+  await waitForInitialization();
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
+    return {
+      success: false,
+      error: 'auth/not-initialized'
+    };
+  }
+  
   try {
-    await auth.sendPasswordResetEmail(email);
+    await firebaseSendPasswordResetEmail(auth, email);
     return {
       success: true
     };
@@ -106,8 +197,17 @@ export async function sendPasswordResetEmail(email) {
 }
 
 export async function confirmPasswordReset(oobCode, newPassword) {
+  await waitForInitialization();
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
+    return {
+      success: false,
+      error: 'auth/not-initialized'
+    };
+  }
+  
   try {
-    await auth.confirmPasswordReset(oobCode, newPassword);
+    await firebaseConfirmPasswordReset(auth, oobCode, newPassword);
     return {
       success: true
     };
@@ -135,19 +235,31 @@ export function getErrorMessage(errorCode) {
     'auth/invalid-verification-code': '無効な確認コードです',
     'auth/invalid-verification-id': '無効な確認IDです',
     'auth/quota-exceeded': 'クォータを超過しました',
-    'auth/requires-recent-login': 'セキュリティのため、最近ログインしてください'
+    'auth/requires-recent-login': 'セキュリティのため、最近ログインしてください',
+    'auth/not-initialized': 'Firebaseが初期化されていません'
   };
   
   return errorMessages[errorCode] || 'エラーが発生しました';
 }
 
-export function getCurrentUser() {
-  return auth.currentUser;
+export async function getCurrentUser() {
+  await waitForInitialization();
+  const user = auth ? auth.currentUser : null;
+  return user;
 }
 
 export async function signOut() {
+  await waitForInitialization();
+  if (!auth) {
+    console.error('Firebase Auth is not initialized');
+    return {
+      success: false,
+      error: 'auth/not-initialized'
+    };
+  }
+  
   try {
-    await auth.signOut();
+    await firebaseSignOut(auth);
     return {
       success: true
     };
