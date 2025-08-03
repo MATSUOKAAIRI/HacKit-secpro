@@ -1,5 +1,12 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// Firestoreの更新に必要
+import {
+  doc,
+  updateDoc,
+  increment
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
@@ -21,6 +28,14 @@ const urlParams = new URLSearchParams(window.location.search);
 const placeFilter = urlParams.get("place");
 
 // place が指定されていない場合は何もしない
+const getEmpathizedIds = () =>
+  JSON.parse(localStorage.getItem("empathizedIds") || "[]");
+
+const addEmpathizedId = (id) => {
+  const ids = getEmpathizedIds();
+  ids.push(id);
+  localStorage.setItem("empathizedIds", JSON.stringify(ids));
+};
 if (!placeFilter) {
   rankingSection.innerHTML = "<p>号館が指定されていません。</p>";
 } else {
@@ -34,26 +49,52 @@ async function fetchBuildingRankings(place) {
   let rank = 1;
   rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;
 
-  querySnapshot.forEach((docSnapshot) => {
-    const data = docSnapshot.data();
-    if (data.place !== place) return;
+querySnapshot.forEach((docSnapshot) => {
+  const data = docSnapshot.data();
+  const docId = docSnapshot.id;
 
-    const item = document.createElement("div");
-    item.className = "ranking-item";
-    item.innerHTML = `
-      <span class="rank">${rank}位</span>
-      <div class="content">
-        <p class="summary">${data.text}</p>
-        <span class="category">#${data.category}</span>
-      </div>
-      <div class="votes-container">
-        <span class="votes"><span class="empathy-count">${data.empathy}</span></span>
-      </div>
-    `;
+  if (data.place !== place) return;
 
-    rankingSection.appendChild(item);
-    rank++;
-  });
+  const isEmpathized = getEmpathizedIds().includes(docId);
+
+  const item = document.createElement("div");
+  item.className = "ranking-item";
+  item.innerHTML = `
+    <span class="rank">${rank}位</span>
+    <div class="content">
+      <p class="summary">${data.text}</p>
+      <span class="category">#${data.category}</span>
+    </div>
+    <div class="votes-container">
+      <span class="votes"><span class="empathy-count">${data.empathy}</span></span>
+      <button class="empathy-btn ${isEmpathized ? 'empathized' : ''}" data-id="${docId}" ${isEmpathized ? "disabled" : ""}>
+        👍 共感
+      </button>
+    </div>
+  `;
+
+  const button = item.querySelector(".empathy-btn");
+
+  if (!isEmpathized) {
+    button.addEventListener("click", async () => {
+      const ref = doc(db, "opinion", docId);
+      await updateDoc(ref, {
+        empathy: increment(1)
+      });
+
+      const countSpan = item.querySelector(".empathy-count");
+      countSpan.textContent = parseInt(countSpan.textContent) + 1;
+
+      button.disabled = true;
+      button.classList.add("empathized");
+      addEmpathizedId(docId);
+    });
+  }
+
+  rankingSection.appendChild(item);
+  rank++;
+});
+
 
   if (rank === 1) {
     rankingSection.innerHTML += `<p>この号館にはまだ投稿がありません。</p>`;
