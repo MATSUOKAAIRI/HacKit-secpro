@@ -107,7 +107,21 @@ let twenythree = 0; // 23号館カウント
 let twentfour = 0; // 24号館カウント
 let twentysevwn = 0; // 27号館カウント
 let other = 0; // その他号館カウント
-
+let oneempty = 0; // 1号館のempathyカウント
+let twoempty = 0; // 2号館のempathyカウント
+let threeempty = 0; // 3号館のempathyカウント
+let fiveempty = 0; // 5号館のempathyカウント
+let sixempty = 0; // 6号館のempathyカウント
+let osixempty = 0; // 6号館のempathyカウント
+let sevenempty = 0; // 7号館のempathyカウント
+let eightempty = 0; // 8号館のempathyカウント
+let twelveempty = 0; // 12号館のempathyカウント
+let twntyoneempty = 0; // 21号館のempathyカウント
+let twenythreeempty = 0; // 23号館のempathyカウント
+let twentfourempty = 0; // 24号館のempathyカウント
+let twentysevwnempty = 0; // 27号館のempathyカウント
+let otherempty = 0; // その他号館のempathyカウント
+const placeEmphasisoneCount = {};
 opinions.forEach(op => {
     if (op.place === "1号館") {
         one += 1;
@@ -119,10 +133,10 @@ opinions.forEach(op => {
         three  += 1;
     }  else if (op.place === "5号館") { 
         five += 1;
-    } else if (op.place === "6号館") {
+    } else if (op.place === "6号館/LC") {
         six += 1;   
     }
-    else if (op.place === "6号館") {
+    else if (op.place === "6号館/ホール") {
         osix += 1;   
     }
     else if (op.place === "7号館") {
@@ -142,14 +156,43 @@ opinions.forEach(op => {
     } else {
         other += 1; // その他の場所
     }
-});
 
+        if (op.place === "1号館") {
+            oneempty += (op.empathy || 0); 
+        } else if (op.place === "2号館") {
+            twoempty += (op.empathy || 0);
+        } else if (op.place === "3号館") {
+            threeempty += (op.empathy || 0);
+        } else if (op.place === "5号館") {
+            fiveempty += (op.empathy || 0);
+        } else if (op.place === "6号館/ホール") {
+            sixempty += (op.empathy || 0);
+        } else if (op.place === "6号館/LC") {
+            osixempty += (op.empathy || 0);
+        } else if (op.place === "7号館") {
+            sevenempty += (op.empathy || 0);
+        } else if (op.place === "8号館") {
+            eightempty += (op.empathy || 0);
+        } else if (op.place === "12号館") {
+            twelveempty += (op.empathy || 0);
+        } else if (op.place === "21号館") {
+            twntyoneempty += (op.empathy || 0);
+        } else if (op.place === "23号館") {
+            twenythreeempty += (op.empathy || 0);
+        } else if (op.place === "24号館") {
+            twentfourempty += (op.empathy || 0);
+        } else if (op.place === "27号館") {
+            twentysevwnempty += (op.empathy || 0);
+        } else {
+            otherempty += (op.empathy || 0);
+        }
+    })
 console.log("1号館の数:", one);
 console.log("2号館の数:", two);
 console.log("3号館の数:", three);
 console.log("5号館の数:", five);
-console.log("6号館の数:", six);
-console.log("6号館の数:", osix);
+console.log("6号館/ホールの数:", six);
+console.log("6号館/LCの数:", osix);
 console.log("7号館の数:", seven);
 console.log("8号館の数:", eight);
 console.log("12号館の数:", twelve);
@@ -158,7 +201,20 @@ console.log("23号館の数:", twenythree);
 console.log("24号館の数:", twentfour);
 console.log("27号館の数:", twentysevwn);
 console.log("その他の数:", other);
-
+console.log("1号館のempathy数:", oneempty);
+console.log("2号館のempathy数:", twoempty);
+console.log("3号館のempathy数:", threeempty);
+console.log("5号館のempathy数:", fiveempty);
+console.log("6号館/LCのempathy数:", sixempty);
+console.log("6号館/ホールのempathy数:", osixempty);
+console.log("7号館のempathy数:", sevenempty);
+console.log("8号館のempathy数:", eightempty);
+console.log("12号館のempathy数:", twelveempty);
+console.log("21号館のempathy数:", twntyoneempty);
+console.log("23号館のempathy数:", twenythreeempty);
+console.log("24号館のempathy数:", twentfourempty);
+console.log("27号館のempathy数:", twentysevwnempty);
+console.log("その他のempathy数:", otherempty);
 
         // 計算したスコアを基に、ヒートマップの見た目を更新
         renderHeatmap(scores);
