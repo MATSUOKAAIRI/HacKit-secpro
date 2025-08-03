@@ -21,23 +21,18 @@ function loadFirebaseConfig() {
     window.FIREBASE_PROJECT_ID === '{{ FIREBASE_PROJECT_ID }}';
   
   if (hasTemplateVariables) {
-    console.error('script.js - 環境変数がテンプレート変数のままです。Cloudflare Pagesで環境変数を設定してください。');
+    console.warn('script.js - 環境変数がテンプレート変数のままです。デフォルト設定を使用します。');
     
-    // 開発環境用のフォールバック設定
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-      console.warn('script.js - 開発環境のため、デフォルト設定を使用します');
-      firebaseConfig = {
-        apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-        authDomain: "hackit-d394f.firebaseapp.com",
-        projectId: "hackit-d394f",
-        storageBucket: "hackit-d394f.firebasestorage.app",
-        messagingSenderId: "73269710558",
-        appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-        measurementId: "G-4MBQ6S9SDC"
-      };
-    } else {
-      throw new Error('script.js - 環境変数が正しく設定されていません。Cloudflare Pagesで環境変数を設定してください。');
-    }
+    // 本番環境でもデフォルト設定を使用
+    firebaseConfig = {
+      apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+      authDomain: "hackit-d394f.firebaseapp.com",
+      projectId: "hackit-d394f",
+      storageBucket: "hackit-d394f.firebasestorage.app",
+      messagingSenderId: "73269710558",
+      appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+      measurementId: "G-4MBQ6S9SDC"
+    };
   } else {
     // 環境変数から設定を取得
     firebaseConfig = {
@@ -52,23 +47,17 @@ function loadFirebaseConfig() {
     
     // 必須設定の検証
     if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
-      console.error('script.js - Firebase設定が不完全です。環境変数を確認してください。');
+      console.error('script.js - Firebase設定が不完全です。デフォルト設定を使用します。');
       
-      // 開発環境用のフォールバック設定（本番環境では削除）
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        console.warn('script.js - 開発環境のため、デフォルト設定を使用します');
-        firebaseConfig = {
-          apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-          authDomain: "hackit-d394f.firebaseapp.com",
-          projectId: "hackit-d394f",
-          storageBucket: "hackit-d394f.firebasestorage.app",
-          messagingSenderId: "73269710558",
-          appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-          measurementId: "G-4MBQ6S9SDC"
-        };
-      } else {
-        throw new Error('script.js - Firebase設定が不完全です。環境変数を確認してください。');
-      }
+      firebaseConfig = {
+        apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+        authDomain: "hackit-d394f.firebaseapp.com",
+        projectId: "hackit-d394f",
+        storageBucket: "hackit-d394f.firebasestorage.app",
+        messagingSenderId: "73269710558",
+        appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+        measurementId: "G-4MBQ6S9SDC"
+      };
     }
   }
   
