@@ -350,5 +350,22 @@ footer {
 }
 
 .empathy-btn.empathized:hover {
-  background-color: #28a745;
+    background-color: #28a745;
+}
+
+/* データなし・エラー表示 */
+.no-data, .error {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 1.1em;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
 }

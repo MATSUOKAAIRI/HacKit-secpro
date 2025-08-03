@@ -6,32 +6,69 @@ let db = null;
 let auth = null;
 let currentUser = null;
 
-// サーバーから環境変数を取得して設定を更新
-async function loadFirebaseConfig() {
-  try {
-    const response = await fetch('/api/config');
-    const config = await response.json();
+// Firebase設定を直接設定
+function loadFirebaseConfig() {
+  // 環境変数の確認
+  console.log('script.js - Firebase環境変数の確認:');
+  console.log('FIREBASE_API_KEY:', window.FIREBASE_API_KEY ? '設定済み' : '未設定');
+  console.log('FIREBASE_AUTH_DOMAIN:', window.FIREBASE_AUTH_DOMAIN ? '設定済み' : '未設定');
+  console.log('FIREBASE_PROJECT_ID:', window.FIREBASE_PROJECT_ID ? '設定済み' : '未設定');
+  
+  // テンプレート変数がそのまま表示されているかチェック
+  const hasTemplateVariables = 
+    window.FIREBASE_API_KEY === '{{ FIREBASE_API_KEY }}' ||
+    window.FIREBASE_AUTH_DOMAIN === '{{ FIREBASE_AUTH_DOMAIN }}' ||
+    window.FIREBASE_PROJECT_ID === '{{ FIREBASE_PROJECT_ID }}';
+  
+  if (hasTemplateVariables) {
+    console.warn('script.js - 環境変数がテンプレート変数のままです。デフォルト設定を使用します。');
     
+    // 本番環境でもデフォルト設定を使用
     firebaseConfig = {
-      apiKey: config.firebase.apiKey,
-      authDomain: config.firebase.authDomain,
-      projectId: config.firebase.projectId,
-      storageBucket: config.firebase.storageBucket,
-      messagingSenderId: config.firebase.messagingSenderId,
-      appId: config.firebase.appId,
-      measurementId: config.firebase.measurementId
+      apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+      authDomain: "hackit-d394f.firebaseapp.com",
+      projectId: "hackit-d394f",
+      storageBucket: "hackit-d394f.firebasestorage.app",
+      messagingSenderId: "73269710558",
+      appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+      measurementId: "G-4MBQ6S9SDC"
+    };
+  } else {
+    // 環境変数から設定を取得
+    firebaseConfig = {
+      apiKey: window.FIREBASE_API_KEY,
+      authDomain: window.FIREBASE_AUTH_DOMAIN,
+      projectId: window.FIREBASE_PROJECT_ID,
+      storageBucket: window.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: window.FIREBASE_MESSAGING_SENDER_ID,
+      appId: window.FIREBASE_APP_ID,
+      measurementId: window.FIREBASE_MEASUREMENT_ID
     };
     
-    // Firebaseを初期化
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    
-    return { app, db, auth };
-  } catch (error) {
-    console.error('Firebase設定の読み込みでエラーが発生しました:', error);
-    throw error;
+    // 必須設定の検証
+    if (!firebaseConfig.apiKey || !firebaseConfig.authDomain || !firebaseConfig.projectId) {
+      console.error('script.js - Firebase設定が不完全です。デフォルト設定を使用します。');
+      
+      firebaseConfig = {
+        apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
+        authDomain: "hackit-d394f.firebaseapp.com",
+        projectId: "hackit-d394f",
+        storageBucket: "hackit-d394f.firebasestorage.app",
+        messagingSenderId: "73269710558",
+        appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
+        measurementId: "G-4MBQ6S9SDC"
+      };
+    }
   }
+  
+  console.log('script.js - Firebase設定:', firebaseConfig);
+  
+  // Firebaseを初期化
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  
+  return { app, db, auth };
 }
 
 const rankingSection = document.querySelector(".ranking");
@@ -39,7 +76,7 @@ const rankingSection = document.querySelector(".ranking");
 // 認証状態の監視
 async function initializeRankingApp() {
   try {
-    const firebaseApp = await loadFirebaseConfig();
+    const firebaseApp = loadFirebaseConfig();
     db = firebaseApp.db;
     auth = firebaseApp.auth;
     
@@ -52,11 +89,18 @@ async function initializeRankingApp() {
     
     // 認証状態の監視を開始
     try {
-      firebaseOnAuthStateChanged(auth, (user) => {
+      const authCallback = (user) => {
         currentUser = user;
         // ユーザー状態が変わったらランキングを再読み込み
         fetchRankings();
-      });
+      };
+      
+      // コールバック関数の検証
+      if (typeof authCallback === 'function') {
+        firebaseOnAuthStateChanged(auth, authCallback);
+      } else {
+        console.error('認証コールバックが関数ではありません');
+      }
     } catch (error) {
       console.error('認証状態の監視でエラーが発生しました:', error);
     }

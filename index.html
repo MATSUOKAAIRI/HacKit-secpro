@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ヘッダーのサンプル</title>
+    <title>KIT不満箱</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -80,6 +80,18 @@
         </map>
 
     </main>
+    
+    <!-- Cloudflare Pages環境変数を読み込み -->
+    <script>
+        // Cloudflare Pagesの環境変数をwindowオブジェクトに設定
+        window.FIREBASE_API_KEY = '{{ FIREBASE_API_KEY }}';
+        window.FIREBASE_AUTH_DOMAIN = '{{ FIREBASE_AUTH_DOMAIN }}';
+        window.FIREBASE_PROJECT_ID = '{{ FIREBASE_PROJECT_ID }}';
+        window.FIREBASE_STORAGE_BUCKET = '{{ FIREBASE_STORAGE_BUCKET }}';
+        window.FIREBASE_MESSAGING_SENDER_ID = '{{ FIREBASE_MESSAGING_SENDER_ID }}';
+        window.FIREBASE_APP_ID = '{{ FIREBASE_APP_ID }}';
+        window.FIREBASE_MEASUREMENT_ID = '{{ FIREBASE_MEASUREMENT_ID }}';
+    </script>
     
     <!-- Firebase設定と認証機能 -->
     <script type="module" src="firebase-config.js"></script>

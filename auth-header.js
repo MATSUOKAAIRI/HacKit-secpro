@@ -1,6 +1,25 @@
 // Firebase Authentication関数をインポート
 import { onAuthStateChanged, signOut, getCurrentUser } from './firebase-config.js';
 
+// 投稿ボタンの状態を更新する関数
+function updatePostButtonForAuthState(user) {
+    const postButton = document.querySelector('.post-button');
+    
+    if (postButton) {
+        if (user) {
+            // ログイン済みの場合
+            postButton.textContent = '投稿';
+            postButton.style.opacity = '1';
+            postButton.style.pointerEvents = 'auto';
+        } else {
+            // 未ログインの場合
+            postButton.textContent = '投稿';
+            postButton.style.opacity = '0.7';
+            postButton.style.pointerEvents = 'auto';
+        }
+    }
+}
+
 // 認証状態に応じてヘッダーを更新する関数
 function updateHeaderForAuthState(user) {
     const authMenuItem = document.getElementById('auth-menu-item');
@@ -48,7 +67,6 @@ function updateHeaderForAuthState(user) {
         `;
     }
 }
-
 
 // 認証状態が変更された時の処理
 function handleAuthStateChange(user) {
