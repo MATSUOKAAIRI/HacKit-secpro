@@ -6,6 +6,9 @@
     <title>KIT不満箱</title>
 <link href="index.html"></link>
     <link rel="stylesheet" href="index.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
@@ -25,10 +28,10 @@
                     <span class="bar"></span>
                 </button>
                 <ul class="nav-menu" id="nav-menu">
-                    <li><a href="index.html">ホーム</a></li>
-                    <li><a href="ranking.html">ランキング</a></li>
+                    <li><a href="/">ホーム</a></li>
+                    <li><a href="/HacKit-secpro/ranking.html">ランキング</a></li>
                     <li id="auth-menu-item">
-                        <a href="login.html" id="auth-link">ログイン</a>
+                        <a href="/HacKit-secpro/login.html" id="auth-link">ログイン</a>
                     </li>
                 </ul>
             </div>
@@ -118,7 +121,7 @@
 
 </html>
     <script src="index.js" type="module"></script>
-
+     <script type="module" src="firebase-config.js"></script>
     <script>
         // JavaScriptでハンバーガーメニューのクリックイベントを処理
         const hamburgerButton = document.getElementById('hamburger-button');
