@@ -223,8 +223,10 @@ footer {
 
 /* 各投稿アイテム */
 .ranking-item {
-  display: flex;
-  align-items: center;
+  align-items: flex-start;
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
   background: #fff;
   margin-bottom: 1.5em;
   padding: 1em;
@@ -233,27 +235,51 @@ footer {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.overview{
+  display:flex;
+}
+
 .ranking-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .rank {
+  align-self: flex-start;
   font-size: 1.5rem;
   font-weight: bold;
   color: #d64545;
   margin-right: 1rem;
 }
 
-
 .content {
   flex-grow: 1;
+    max-width: 100%; /* 横に広がらないよう制限 */
+  word-break: break-word; /* 長い単語でも折り返す */
+  overflow-wrap: break-word;
 }
 
 .summary {
   margin: 0 0 0.5em 0;
   font-size: 1.1em;
   font-weight: 600;
+}
+
+.meta {
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 4px;
+  display: flex;
+  gap: 10px;
+}
+
+.details {
+    max-width: 100%; /* 横に広がらないよう制限 */
+  word-break: break-word; /* 長い単語でも折り返す */
+  overflow-wrap: break-word;
+  display: none;
+  margin-top: 14px;
+  color: #333;
 }
 
 .category,
@@ -268,6 +294,7 @@ footer {
 }
 
 .votes-container {
+  align-self: flex-start;
   display: flex;
   align-items: center;
   margin-left: auto; /* これで右寄せ */
