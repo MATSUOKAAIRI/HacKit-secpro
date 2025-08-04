@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KIT不満箱</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="ranking.css">
 </head>
 <body>
 
@@ -36,12 +36,19 @@
 
         </div>
         </header>
-<head>
-  <meta charset="UTF-8">
-  <title>6号館/ホールの不満ランキング</title>
-  <link rel="stylesheet" href="ranking.css">
-</head>
 <body>
+
+  <div class="filter-controls">
+  <select id="categoryFilter">
+    <option value="">すべてのカテゴリ</option>
+          <option value="施設">施設</option>
+          <option value="授業">授業</option>
+          <option value="人間関係">人間関係</option>
+          <option value="職員">職員</option>
+          <option value="回線">回線</option>
+          <option value="その他">その他</option>
+  </select>
+  </div>
 
 <main>
   <section class="ranking">
@@ -49,16 +56,12 @@
   </section>
 </main>
 
-<footer>
-  <p>&copy; 2025 大学の不満箱プロジェクト</p>
-</footer>
-
 <!-- JSで place=1号館 を渡す -->
 <script type="module">
-  import './building-ranking.js';
+  import './building-ranking_v2.js';
 </script>
 <script>
-  history.replaceState(null, "", "?place=6号館/ホール");
+  history.replaceState(null, "", "");
             // JavaScriptでハンバーガーメニューのクリックイベントを処理
         const hamburgerButton = document.getElementById('hamburger-button');
         const navMenu = document.getElementById('nav-menu');

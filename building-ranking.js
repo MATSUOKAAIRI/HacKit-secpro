@@ -1,69 +1,49 @@
 import { authClient, authStateManager } from './auth-client.js';
 
-const rankingSection = document.querySelector(".ranking");
+const rankingSection = document.querySelector(".ranking");//rankingのclassにrankingSectionという変数を置く-----
 
-let currentUser = null;
+// ページのクエリパラメータから「place」を取得----------------------------
+const urlParams = new URLSearchParams(window.location.search);
+const placeFilter = urlParams.get("place");
 
-// 認証状態の監視
-authStateManager.addListener((user) => {
-  currentUser = user;
-  console.log('building-ranking.js - 認証状態変更:', user ? `ログイン済み (${user.email})` : '未ログイン');
-});
 
-// 共感した投稿のIDを取得
-const getEmpathizedIds = () => {
-  const ids = localStorage.getItem("empathizedIds");
-  return ids ? JSON.parse(ids) : [];
-};
+const getEmpathizedIds = () =>
+  JSON.parse(localStorage.getItem("empathizedIds") || "[]");//共感済みかどうか
 
-// 共感した投稿のIDを追加
 const addEmpathizedId = (id) => {
   const ids = getEmpathizedIds();
   ids.push(id);
   localStorage.setItem("empathizedIds", JSON.stringify(ids));
-};
-
-// URLパラメータから号館を取得
-const urlParams = new URLSearchParams(window.location.search);
-const placeFilter = urlParams.get('place');
-
+};//共感ボタンの管理
 if (!placeFilter) {
   rankingSection.innerHTML = "<p>号館が指定されていません。</p>";
 } else {
   fetchBuildingRankings(placeFilter);
-}
+}//placeFilterのチェック------------------------------------------------
 
 async function fetchBuildingRankings(place) {
-  try {
-    // authClientを使用してFirestoreにアクセス
-    const result = await authClient.getPosts();
-    if (!result.success) {
-      console.error('投稿取得エラー:', result.error);
-      return;
-    }
-    
-    const posts = result.posts;
-    // 共感数でソート
-    posts.sort((a, b) => (b.empathy || 0) - (a.empathy || 0));
+  const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
+  const querySnapshot = await getDocs(q);//クエリを作っている-----------------------
 
-  let rank = 1;
-  rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;
+  let rank = 1;//順位を付ける最後のrank++で順番にランクづけられてる----------------
+  rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;//rankingにh2を書く
 
-posts.forEach((post) => {
-  const data = post;
-  const docId = post.id;
+querySnapshot.forEach((docSnapshot) => {
+  const data = docSnapshot.data();
+  const docId = docSnapshot.id;
 
-  if (data.place !== place) return;
+  if (data.place !== place) return;//あってなければスキップ---
 
-  const isEmpathized = getEmpathizedIds().includes(docId);
+  const isEmpathized = getEmpathizedIds().includes(docId);//共感済みかどうか
 
   const item = document.createElement("div");
   item.className = "ranking-item";
   item.innerHTML = `
     <span class="rank">${rank}位</span>
     <div class="content">
-      <p class="summary">${data.text}</p>
+      <p class="summary">${data.title}</p>
       <span class="category">#${data.category}</span>
+      <span class="place">📍${data.place}</span>
     </div>
     <div class="votes-container">
       <span class="votes"><span class="empathy-count">${data.empathy}</span></span>
@@ -72,9 +52,10 @@ posts.forEach((post) => {
       </button>
     </div>
   `;
-
+/*
   const button = item.querySelector(".empathy-btn");
 
+  
   if (!isEmpathized) {
     button.addEventListener("click", async () => {
       try {
@@ -96,7 +77,7 @@ posts.forEach((post) => {
         alert("共感の処理に失敗しました");
       }
     });
-  }
+  }*/
 
   rankingSection.appendChild(item);
   rank++;
