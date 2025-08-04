@@ -1,5 +1,4 @@
 import { authClient, authStateManager } from './auth-client.js';
-
 document.addEventListener('DOMContentLoaded', async function() {
     const passwordForm = document.getElementById('passwordForm');
     const currentPasswordInput = document.getElementById('currentPassword');
