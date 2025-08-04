@@ -79,7 +79,7 @@ class AuthClient {
   async getFirebaseConfig() {
     try {
       // まず環境変数から取得を試行
-      if (window.FIREBASE_API_KEY && window.FIREBASE_API_KEY !== '{{ FIREBASE_API_KEY }}') {
+      if (window.FIREBASE_API_KEY) {
         console.log('📋 環境変数からFirebase設定を取得');
         return {
           apiKey: window.FIREBASE_API_KEY,
@@ -105,22 +105,6 @@ class AuthClient {
       return config;
     } catch (error) {
       console.error('Firebase設定の取得に失敗:', error);
-      
-      // 開発環境でのみフォールバック設定を使用
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        console.warn('開発環境用のフォールバック設定を使用します');
-        return {
-          apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-          authDomain: "hackit-d394f.firebaseapp.com",
-          projectId: "hackit-d394f",
-          storageBucket: "hackit-d394f.firebasestorage.app",
-          messagingSenderId: "73269710558",
-          appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-          measurementId: "G-4MBQ6S9SDC"
-        };
-      }
-      
-      throw new Error('Firebase設定の取得に失敗しました。環境変数またはサーバーに接続できません。');
     }
   }
 
