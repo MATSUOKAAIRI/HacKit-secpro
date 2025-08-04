@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KIT不満箱</title>
+<link href="index.html"></link>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -38,9 +39,12 @@
 
         <nav class="category-filters">
             <a href="#" class="category-button cat-all">すべて</a>
-            <a href="#" class="category-button cat-facility">施設/設備</a>
+            <a href="#" class="category-button cat-facility">施設</a>
             <a href="#" class="category-button cat-class">授業</a>
-            <a href="#" class="category-button cat-human">人間関係</a>
+            <a href="#" class="category-button cat-4">人間関係</a>
+            <a href="#" class="category-button cat-5">職員</a>
+            <a href="#" class="category-button cat-6">回線</a>
+            <a href="#" class="category-button cat-7">その他</a>
         </nav>
         
         <div class="map-area">
@@ -50,7 +54,7 @@
             <div id="pin-bldg23" class="map-pin" style="top: 106px; left: 306px;"></div>
             <div id="pin-bldg24" class="map-pin" style="top: 32px; left: 295px;"></div>
             <div id="pin-bldg27" class="map-pin" style="top: 149px; left: 260px;"></div>
-            <div id="pin-bldg26" class="map-pin" style="top: 143px; left: 297px;"></div>
+            <div id="pin-bldg26" class="map-pin" style="top: 143px; left: 300px;"></div>
             <div id="pin-bldg8" class="map-pin" style="top: 180px; left: 285px;"></div>
             <div id="pin-bldg7" class="map-pin" style="top: 34px; left: 178px;"></div>
             <div id="pin-bldg5" class="map-pin" style="top: 120px; left: 196px;"></div>
@@ -61,6 +65,14 @@
             <div id="pin-bldg3" class="map-pin" style="top: 179px; left: 48px;"></div>
             <div id="pin-bldg2" class="map-pin" style="top: 240px; left: 45px;"></div>
         </div>
+        <div class="usage-box">
+    <h2 class="usage-title">使い方</h2>
+    <p class="map-description">
+        右上の「投稿」ボタンから日頃思っている不満を共有しよう！<br>
+        下のマップのピンからその場所の不満が見れるよ
+    </p>
+</div>
+
 
         <map name="campus-map">
             <area data-pin-id="pin-bldg21" shape="rect" coords="253, 227, 311, 267" href="place.html?place=21号館" title="21号館の不満を見る">
@@ -80,6 +92,11 @@
         </map>
 
     </main>
+
+    <footer>
+        <p>&copy; 2025 大学の不満箱プロジェクト</p>
+    </footer>
+
     
     <!-- Cloudflare Pages環境変数を読み込み -->
     <script>
