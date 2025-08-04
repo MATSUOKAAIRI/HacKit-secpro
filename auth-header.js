@@ -30,7 +30,6 @@ function updateHeaderForAuthState(user) {
         authMenuItem.innerHTML = `
             <div class="user-menu">
                 <div class="user-actions">
-                    <span class="user-email">${user.email}</span>
                     <a href="password-change.html" class="password-change-link">パスワード変更</a>
                     <a href="#" id="logout-link" class="logout-link">ログアウト</a>
                 </div>
@@ -85,16 +84,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         console.log('ヘッダー認証状態監視を開始...');
         
-        // Firebase初期化は他のスクリプトで行われるため、ここではスキップ
-        
         // 認証状態の変更を監視
         authStateManager.addListener(function(user) {
             console.log('ヘッダー認証状態変更:', user ? 'ログイン済み' : '未ログイン');
             handleAuthStateChange(user);
         });
         
+        // 初期化が完了するまで待機
+        await authStateManager.waitForInitialization();
+        
         // 初期状態を設定
-        const currentUser = await authStateManager.waitForInitialization();
+        const currentUser = await authClient.getCurrentUser();
         console.log('ヘッダー初期ユーザー:', currentUser);
         handleAuthStateChange(currentUser);
         

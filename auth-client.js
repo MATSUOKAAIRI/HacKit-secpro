@@ -25,7 +25,7 @@ class AuthClient {
       
       // Firebase SDKをインポート
       const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
-      const { getAuth } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+      const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
       const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
       
       // Firebaseを初期化
@@ -43,6 +43,32 @@ class AuthClient {
       this.db = getFirestore(this.app);
       this.isInitialized = true;
       console.log('Firebase認証とFirestoreが初期化されました');
+      
+      // 認証状態の変更を監視
+      onAuthStateChanged(this.auth, async (user) => {
+        console.log('Firebase Auth状態変更:', user ? `ログイン済み (${user.email})` : '未ログイン');
+        
+        if (user) {
+          // ログイン済みの場合
+          const idToken = await user.getIdToken();
+          this.token = idToken;
+          this.user = {
+            uid: user.uid,
+            email: user.email
+          };
+          localStorage.setItem('authToken', idToken);
+          localStorage.setItem('user', JSON.stringify(this.user));
+        } else {
+          // 未ログインの場合
+          this.token = null;
+          this.user = null;
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+        }
+        
+        // 認証状態を更新
+        authStateManager.updateAuthState(this.user);
+      });
       
     } catch (error) {
       console.error('Firebase初期化エラー:', error);
@@ -99,6 +125,9 @@ class AuthClient {
       localStorage.setItem('authToken', idToken);
       localStorage.setItem('user', JSON.stringify(this.user));
 
+      // 認証状態を更新
+      authStateManager.updateAuthState(this.user);
+
       return {
         success: true,
         message: 'アカウントの作成に成功しました',
@@ -149,6 +178,9 @@ class AuthClient {
       localStorage.setItem('authToken', idToken);
       localStorage.setItem('user', JSON.stringify(this.user));
 
+      // 認証状態を更新
+      authStateManager.updateAuthState(this.user);
+
       return {
         success: true,
         message: 'ログインに成功しました',
@@ -191,6 +223,9 @@ class AuthClient {
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
 
+      // 認証状態を更新
+      authStateManager.updateAuthState(null);
+
       return { success: true };
     } catch (error) {
       console.error('ログアウトエラー:', error);
@@ -224,6 +259,28 @@ class AuthClient {
         localStorage.setItem('user', JSON.stringify(this.user));
         
         return this.user;
+      }
+
+      // ローカルストレージから認証状態を復元
+      const storedToken = localStorage.getItem('authToken');
+      const storedUser = localStorage.getItem('user');
+      
+      if (storedToken && storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          console.log('ローカルストレージから認証状態を復元:', parsedUser.email);
+          
+          // ローカルストレージの情報を信頼（簡易的な復元）
+          this.token = storedToken;
+          this.user = parsedUser;
+          
+          return this.user;
+        } catch (error) {
+          console.error('ローカルストレージの認証状態復元エラー:', error);
+          // 無効なデータの場合はクリア
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+        }
       }
 
       return null;
@@ -341,6 +398,43 @@ class AuthClient {
     }
   }
 
+  // 共感を追加
+  async addEmpathy(postId) {
+    try {
+      if (!this.db) {
+        await this.initializeFirebase();
+      }
+
+      const user = this.auth.currentUser;
+      if (!user) {
+        throw new Error('認証が必要です');
+      }
+
+      const { doc, updateDoc, increment, arrayUnion } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+      
+      const docRef = doc(this.db, "opinion", postId);
+      await updateDoc(docRef, {
+        empathy: increment(1),
+        empathizedUsers: arrayUnion(user.uid)
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('共感追加エラー:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  }
+
+  // Firestoreのdbインスタンスを取得（他のスクリプトで使用）
+  async getFirestoreDB() {
+    if (!this.db) {
+      await this.initializeFirebase();
+    }
+    return this.db;
+  }
 
 }
 
@@ -353,6 +447,7 @@ class AuthStateManager {
     this.listeners = [];
     this.currentUser = null;
     this.isInitialized = false;
+    this.initializationPromise = null;
   }
 
   // リスナーを追加
@@ -367,12 +462,22 @@ class AuthStateManager {
 
   // 認証状態を更新
   updateAuthState(user) {
+    console.log('認証状態を更新:', user ? `ログイン済み (${user.email})` : '未ログイン');
     this.currentUser = user;
     this.listeners.forEach(callback => callback(user));
   }
 
   // 認証状態をチェック
   async checkAuthState() {
+    if (this.initializationPromise) {
+      return this.initializationPromise;
+    }
+
+    this.initializationPromise = this._performAuthStateCheck();
+    return this.initializationPromise;
+  }
+
+  async _performAuthStateCheck() {
     try {
       const user = await authClient.getCurrentUser();
       this.updateAuthState(user);
@@ -381,6 +486,7 @@ class AuthStateManager {
     } catch (error) {
       console.error('認証状態チェックエラー:', error);
       this.updateAuthState(null);
+      this.isInitialized = true;
       return null;
     }
   }
@@ -391,14 +497,20 @@ class AuthStateManager {
       return this.currentUser;
     }
     
-    return new Promise((resolve) => {
-      const checkInterval = setInterval(async () => {
-        if (this.isInitialized) {
-          clearInterval(checkInterval);
-          resolve(this.currentUser);
-        }
-      }, 100);
-    });
+    return await this.checkAuthState();
+  }
+
+  // 認証状態を強制更新
+  async forceUpdateAuthState() {
+    try {
+      const user = await authClient.getCurrentUser();
+      this.updateAuthState(user);
+      return user;
+    } catch (error) {
+      console.error('認証状態強制更新エラー:', error);
+      this.updateAuthState(null);
+      return null;
+    }
   }
 }
 

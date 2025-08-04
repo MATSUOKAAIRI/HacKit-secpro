@@ -72,27 +72,22 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         console.log('投稿ボタン認証状態監視を開始...');
         
-        // 少し待機してから初期化（他のスクリプトとの競合を避ける）
-        setTimeout(async () => {
-            try {
-                // 投稿ボタンの設定を最初に行う
-                await setupPostButton();
-                
-                // 認証状態の変更を監視
-                authStateManager.addListener(function(user) {
-                    console.log('投稿ボタン認証状態変更:', user ? 'ログイン済み' : '未ログイン');
-                    updatePostButtonForAuthState(user);
-                });
-                
-                // 初期状態を設定
-                const currentUser = await authClient.getCurrentUser();
-                console.log('投稿ボタン初期ユーザー:', currentUser);
-                updatePostButtonForAuthState(currentUser);
-                
-            } catch (error) {
-                console.error('投稿ボタン初期化エラー:', error);
-            }
-        }, 500);
+        // 認証状態の変更を監視
+        authStateManager.addListener(function(user) {
+            console.log('投稿ボタン認証状態変更:', user ? 'ログイン済み' : '未ログイン');
+            updatePostButtonForAuthState(user);
+        });
+        
+        // 初期化が完了するまで待機
+        await authStateManager.waitForInitialization();
+        
+        // 投稿ボタンの設定を最初に行う
+        await setupPostButton();
+        
+        // 初期状態を設定
+        const currentUser = await authClient.getCurrentUser();
+        console.log('投稿ボタン初期ユーザー:', currentUser);
+        updatePostButtonForAuthState(currentUser);
         
     } catch (error) {
         console.error('投稿ボタン認証状態監視エラー:', error);

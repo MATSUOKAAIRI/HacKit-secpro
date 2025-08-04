@@ -7,6 +7,8 @@ function initializeAuth() {
   authStateManager.addListener((user) => {
     currentUser = user;
     console.log('script.js - 認証状態変更:', user ? `ログイン済み (${user.email})` : '未ログイン');
+    // 認証状態が変わったらランキングを再読み込み
+    fetchRankings();
   });
 }
 
@@ -15,17 +17,17 @@ const rankingSection = document.querySelector(".ranking");
 // 認証状態の監視
 async function initializeRankingApp() {
   try {
-    // Firebase初期化は他のスクリプトで行われるため、ここではスキップ
+    console.log('script.js - 初期化開始...');
     
     // 認証状態の監視を開始
     initializeAuth();
     
-    // 初期化が完了するまで少し待機
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // 初期化が完了するまで待機
+    await authStateManager.waitForInitialization();
     
     // 現在のユーザーを取得
-    const initialUser = await authClient.getCurrentUser();
-    currentUser = initialUser;
+    currentUser = await authClient.getCurrentUser();
+    console.log('script.js - 初期ユーザー:', currentUser);
     
     // ランキングを初期読み込み
     fetchRankings();
@@ -129,21 +131,22 @@ async function fetchRankings(categoryFilter = "", placeFilter = "") {
         }
 
         try {
-          const docRef = doc(db, "opinion", empathyBtn.dataset.id);
-          await updateDoc(docRef, {
-            empathy: increment(1),
-            empathizedUsers: arrayUnion(currentUser.uid)
-          });
+          // authClientを使用して共感を追加
+          const result = await authClient.addEmpathy(empathyBtn.dataset.id);
           
-          // ボタンの状態を更新
-          empathyBtn.textContent = "共感済み";
-          empathyBtn.classList.add("empathized");
-          empathyBtn.disabled = true;
-          
-          // カウントを更新
-          const empathyCountElem = item.querySelector(".empathy-count");
-          const current = parseInt(empathyCountElem.textContent);
-          empathyCountElem.textContent = current + 1;
+          if (result.success) {
+            // ボタンの状態を更新
+            empathyBtn.textContent = "共感済み";
+            empathyBtn.classList.add("empathized");
+            empathyBtn.disabled = true;
+            
+            // カウントを更新
+            const empathyCountElem = item.querySelector(".empathy-count");
+            const current = parseInt(empathyCountElem.textContent);
+            empathyCountElem.textContent = current + 1;
+          } else {
+            alert("共感の処理に失敗しました");
+          }
           
         } catch (error) {
           console.error("共感エラー:", error);

@@ -1,6 +1,6 @@
-import { authClient } from './auth-client.js';
+import { authClient, authStateManager } from './auth-client.js';
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const passwordForm = document.getElementById('passwordForm');
     const currentPasswordInput = document.getElementById('currentPassword');
     const newPasswordInput = document.getElementById('newPassword');
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmNewPasswordError = document.getElementById('confirmNewPasswordError');
 
     function validatePassword(password) {
-        return password.length >= 8;
+        return password.length >= 6;
     }
 
     function checkPasswordStrength(password) {
@@ -35,15 +35,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 認証状態を確認
     async function checkAuthState() {
-        const user = await authClient.getCurrentUser();
-        if (!user) {
-            alert('ログインが必要です');
+        try {
+            console.log('パスワード変更画面 - 認証状態を確認中...');
+            
+            // Firebase初期化を待機
+            await authClient.initializeFirebase();
+            
+            // 認証状態の初期化を待機
+            await authStateManager.waitForInitialization();
+            
+            // 現在のユーザーを取得
+            const user = await authClient.getCurrentUser();
+            console.log('パスワード変更画面 - 現在のユーザー:', user);
+            
+            if (!user) {
+                console.log('パスワード変更画面 - ログインが必要です');
+                alert('ログインが必要です');
+                window.location.href = 'login.html';
+                return false;
+            }
+            
+            console.log('パスワード変更画面 - 認証済みユーザー:', user.email);
+            return true;
+            
+        } catch (error) {
+            console.error('パスワード変更画面 - 認証状態確認エラー:', error);
+            alert('認証状態の確認に失敗しました');
             window.location.href = 'login.html';
+            return false;
         }
     }
 
     // ページ読み込み時に認証状態を確認
-    checkAuthState();
+    const isAuthenticated = await checkAuthState();
+    if (!isAuthenticated) {
+        return; // 認証されていない場合は処理を停止
+    }
 
     currentPasswordInput.addEventListener('input', function() {
         if (this.value && this.value.length < 6) {
@@ -55,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     newPasswordInput.addEventListener('input', function() {
         if (this.value && !validatePassword(this.value)) {
-            showError(this, newPasswordError, 'パスワードは8文字以上で入力してください');
+            showError(this, newPasswordError, 'パスワードは6文字以上で入力してください');
         } else {
             hideError(this, newPasswordError);
         }
@@ -86,6 +113,12 @@ document.addEventListener('DOMContentLoaded', function() {
     passwordForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
+        // 再度認証状態を確認
+        const isAuthenticated = await checkAuthState();
+        if (!isAuthenticated) {
+            return;
+        }
+        
         const currentPassword = currentPasswordInput.value.trim();
         const newPassword = newPasswordInput.value.trim();
         const confirmNewPassword = confirmNewPasswordInput.value.trim();
@@ -105,7 +138,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showError(newPasswordInput, newPasswordError, '新しいパスワードを入力してください');
             isValid = false;
         } else if (!validatePassword(newPassword)) {
-            showError(newPasswordInput, newPasswordError, 'パスワードは8文字以上で入力してください');
+            showError(newPasswordInput, newPasswordError, 'パスワードは6文字以上で入力してください');
             isValid = false;
         } else if (newPassword === currentPassword) {
             showError(newPasswordInput, newPasswordError, '現在のパスワードと同じパスワードは使用できません');

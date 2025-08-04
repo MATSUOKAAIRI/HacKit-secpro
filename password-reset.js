@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const { sendPasswordResetEmail } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
                 
                 await sendPasswordResetEmail(authClient.auth, email);
-                alert('パスワードリセットメールを送信しました。\nメールをご確認ください。\n\n送信先: ' + email);
+                alert('パスワードリセットメールを送信しました。\nメールをご確認ください ');
                 passwordResetForm.reset();
             } catch (error) {
                 console.error('メール送信エラー:', error);

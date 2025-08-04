@@ -1,20 +1,32 @@
-import { authClient } from './auth-client.js';
+import { authClient, authStateManager } from './auth-client.js';
 
 const rankingSection = document.querySelector(".ranking");
 
-// ページのクエリパラメータから「place」を取得
-const urlParams = new URLSearchParams(window.location.search);
-const placeFilter = urlParams.get("place");
+let currentUser = null;
 
-// place が指定されていない場合は何もしない
-const getEmpathizedIds = () =>
-  JSON.parse(localStorage.getItem("empathizedIds") || "[]");
+// 認証状態の監視
+authStateManager.addListener((user) => {
+  currentUser = user;
+  console.log('building-ranking.js - 認証状態変更:', user ? `ログイン済み (${user.email})` : '未ログイン');
+});
 
+// 共感した投稿のIDを取得
+const getEmpathizedIds = () => {
+  const ids = localStorage.getItem("empathizedIds");
+  return ids ? JSON.parse(ids) : [];
+};
+
+// 共感した投稿のIDを追加
 const addEmpathizedId = (id) => {
   const ids = getEmpathizedIds();
   ids.push(id);
   localStorage.setItem("empathizedIds", JSON.stringify(ids));
 };
+
+// URLパラメータから号館を取得
+const urlParams = new URLSearchParams(window.location.search);
+const placeFilter = urlParams.get('place');
+
 if (!placeFilter) {
   rankingSection.innerHTML = "<p>号館が指定されていません。</p>";
 } else {
@@ -65,17 +77,24 @@ posts.forEach((post) => {
 
   if (!isEmpathized) {
     button.addEventListener("click", async () => {
-      const ref = doc(db, "opinion", docId);
-      await updateDoc(ref, {
-        empathy: increment(1)
-      });
+      try {
+        // authClientを使用して共感を追加
+        const result = await authClient.addEmpathy(docId);
+        
+        if (result.success) {
+          const countSpan = item.querySelector(".empathy-count");
+          countSpan.textContent = parseInt(countSpan.textContent) + 1;
 
-      const countSpan = item.querySelector(".empathy-count");
-      countSpan.textContent = parseInt(countSpan.textContent) + 1;
-
-      button.disabled = true;
-      button.classList.add("empathized");
-      addEmpathizedId(docId);
+          button.disabled = true;
+          button.classList.add("empathized");
+          addEmpathizedId(docId);
+        } else {
+          alert("共感の処理に失敗しました");
+        }
+      } catch (error) {
+        console.error("共感エラー:", error);
+        alert("共感の処理に失敗しました");
+      }
     });
   }
 
@@ -83,11 +102,13 @@ posts.forEach((post) => {
   rank++;
 });
 
-
   if (rank === 1) {
-    rankingSection.innerHTML += `<p>この号館にはまだ投稿がありません。</p>`;
+    rankingSection.innerHTML +=
+      '<div class="no-data">まだ投稿がありません</div>';
   }
-  } catch (error) {
-    console.error('ランキング取得エラー:', error);
-  }
+
+} catch (error) {
+  console.error('号館別ランキング取得エラー:', error);
+  rankingSection.innerHTML = '<div class="error">データの読み込みに失敗しました</div>';
+}
 }

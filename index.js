@@ -16,6 +16,9 @@ async function initializeMainApp() {
       updateUI();
     });
     
+    // 初期化が完了するまで待機
+    await authStateManager.waitForInitialization();
+    
     // 現在のユーザーを取得
     currentUser = await authClient.getCurrentUser();
     console.log('現在のユーザー:', currentUser);
@@ -23,9 +26,43 @@ async function initializeMainApp() {
     // 投稿を読み込み
     await loadPosts();
     
+    // マップエリアのホバー機能を設定
+    setupMapAreaHover();
+    
   } catch (error) {
     console.error('Firebase Automation初期化でエラーが発生しました:', error);
   }
+}
+
+// マップエリアのホバー機能を設定
+function setupMapAreaHover() {
+  // Get all the clickable <area> elements
+  const areas = document.querySelectorAll('map[name="campus-map"] area');
+
+  // Add mouseover and mouseout events to each area
+  areas.forEach(area => {
+    // When the mouse enters an area
+    area.addEventListener('mouseover', () => {
+      const pinId = area.dataset.pinId; // Get the pin's ID from the data attribute
+      if (pinId) {
+        const pin = document.getElementById(pinId);
+        if (pin) {
+          pin.classList.add('is-visible'); // Make the corresponding pin visible
+        }
+      }
+    });
+
+    // When the mouse leaves an area
+    area.addEventListener('mouseout', () => {
+      const pinId = area.dataset.pinId;
+      if (pinId) {
+        const pin = document.getElementById(pinId);
+        if (pin) {
+          pin.classList.remove('is-visible'); // Hide the pin again
+        }
+      }
+    });
+  });
 }
 
 // 投稿を読み込み
