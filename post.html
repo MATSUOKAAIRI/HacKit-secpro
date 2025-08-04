@@ -1,104 +1,78 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KIT不満箱</title>
-    <link rel="stylesheet" href="post.css">
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KIT不満箱</title>
+  <link rel="stylesheet"href="post.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <header class="site-header">
-      <div class="logo">
-        <a href="index.html">KIT不満箱</a>
-        </div>
-        <h1 class="catchphrase">あなたの声が大学を変える！！</h1>
+  <div class="form-wrapper">
+    <div class="close-button" onclick="history.back()">×</div>
+    <h1>ご意見フォーム</h1>
+    <form id="form">
+      
+      <div class="form-group">
+        <label for="type">意見の種類：</label>
+        <select id="type" name="type" required>
+          <option value="">選択してください</option>
+          <option value="施設/設備">施設/設備</option>
+          <option value="授業">授業</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
 
-        <div class="header-actions">
+      <div class="form-group">
+        <label for="building">号館：</label>
+        <select id="building" name="building" required>
+          <option value="">選択してください</option>
+          <option value="1号館">1号館</option>
+          <option value="2号館">2号館</option>
+          <option value="3号館">3号館</option>
+          <option value="5号館">5号館</option>
+          <option value="6号館/ホール">6号館/ホール</option>
+          <option value="6号館/LC">6号館/LC</option>
+          <option value="7号館">7号館</option>
+          <option value="8号館">8号館</option>
+          <option value="12号館">12号館</option>
+          <option value="21号館">21号館</option>
+          <option value="23号館">23号館</option>
+          <option value="24号館">24号館</option>
+          <option value="26号館">26号館</option>
+          <option value="27号館">27号館</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+  <label for="title">タイトル：</label>
+  <input type="text" id="title" name="title" placeholder="25文字以内で入力してください" required>
+</div>
 
-            <a href="post.html" class="post-button">投稿</a>
-            
-            <div class="hamburger-menu">
-                <button class="hamburger-button" id="hamburger-button">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
-                <ul class="nav-menu" id="nav-menu">
-                    <li><a href="index.html">ホーム</a></li>
-                    <li><a href="ranking.html">ランキング</a></li>
-                    <li id="auth-menu-item">
-                        <a href="login.html" id="auth-link">ログイン</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-        </header>
-
-
-    <div class="form-wrapper">
-        <div class="close-button" onclick="history.back()">×</div>
-        <h1>不満を投稿</h1>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">あなたの声を聞かせてください</p>
-        
-        <form id="postForm">
-            <div class="form-group">
-                <label for="title">タイトル</label>
-                <input type="text" id="title" name="title" placeholder="不満のタイトルを入力" required>
-                <div class="error-message" id="titleError">タイトルを入力してください</div>
-            </div>
-
-            <div class="form-group">
-                <label for="details">詳細</label>
-                <textarea id="details" name="details" placeholder="不満の詳細を入力してください" rows="5" required></textarea>
-                <div class="error-message" id="detailsError">詳細を入力してください</div>
-            </div>
-
-            <div class="form-group">
-                <label for="category">カテゴリ</label>
-                <select id="category" name="category" required>
-                    <option value="">カテゴリを選択</option>
-                    <option value="facility">施設/設備</option>
-                    <option value="class">授業</option>
-                    <option value="human">人間関係</option>
-                </select>
-                <div class="error-message" id="categoryError">カテゴリを選択してください</div>
-            </div>
-
-            <div class="form-group">
-                <label for="place">場所</label>
-                <select id="place" name="place" required>
-                    <option value="">場所を選択</option>
-                    <option value="1号館">1号館</option>
-                    <option value="2号館">2号館</option>
-                    <option value="3号館">3号館</option>
-                    <option value="5号館">5号館</option>
-                    <option value="6号館(LC)">6号館(LC)</option>
-                    <option value="6号館(ホール)">6号館(ホール)</option>
-                    <option value="7号館">7号館</option>
-                    <option value="8号館">8号館</option>
-                    <option value="12号館">12号館</option>
-                    <option value="21号館">21号館</option>
-                    <option value="23号館">23号館</option>
-                    <option value="24号館">24号館</option>
-                    <option value="26号館">26号館</option>
-                    <option value="27号館">27号館</option>
-                </select>
-                <div class="error-message" id="placeError">場所を選択してください</div>
-            </div>
-
-            <input type="submit" value="投稿する" class="post-btn" id="postBtn">
-        </form>
-
-        <div class="signup-link">
-            <a href="index.html">トップページに戻る</a>
-        </div>
-    </div>
-    
-    <!-- Firebase設定と投稿機能 -->
-    <script type="module" src="auth-client.js"></script>
-    <script type="module" src="post.js"></script>
+<div class="form-group">
+  <label for="details">詳細：</label>
+  <textarea id="details" name="details" rows="5" placeholder="詳細をご記入ください" required></textarea>
+</div>
+      <input type="submit" value="投稿">
+    </form>
+  </div>
+  
+  <!-- Cloudflare Pages環境変数を読み込み -->
+  <script>
+      // Cloudflare Pagesの環境変数をwindowオブジェクトに設定
+      window.FIREBASE_API_KEY = '{{ FIREBASE_API_KEY }}';
+      window.FIREBASE_AUTH_DOMAIN = '{{ FIREBASE_AUTH_DOMAIN }}';
+      window.FIREBASE_PROJECT_ID = '{{ FIREBASE_PROJECT_ID }}';
+      window.FIREBASE_STORAGE_BUCKET = '{{ FIREBASE_STORAGE_BUCKET }}';
+      window.FIREBASE_MESSAGING_SENDER_ID = '{{ FIREBASE_MESSAGING_SENDER_ID }}';
+      window.FIREBASE_APP_ID = '{{ FIREBASE_APP_ID }}';
+      window.FIREBASE_MEASUREMENT_ID = '{{ FIREBASE_MEASUREMENT_ID }}';
+  </script>
+  
+  <!-- Firebase設定と認証機能 -->
+  <script type="module" src="firebase-config.js"></script>
+  <script type="module" src="post.js"></script>
 </body>
 </html>

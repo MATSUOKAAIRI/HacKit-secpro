@@ -1,9 +1,9 @@
-    /* 画面中央配置 */
+/* 画面中央配置 */
     body {
       margin: 0;
       padding: 0;
       font-family: "Segoe UI", sans-serif;
-      background-color: #f0f0f0;
+      background-color: #f5f8ff;
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -28,11 +28,11 @@
     }
 
     /* ラベルと入力欄を縦に並べる */
-    .form-group {
-      margin-bottom: 20px;
-      display: flex;
-      flex-direction: column;
-    }
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
 
     label {
       font-weight: bold;
@@ -40,16 +40,24 @@
       color: #444;
     }
 
-    select,
-    textarea,
-    input[type="submit"] {
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-      width: 100%;
-    }
+select,
+textarea,
+input[type="submit"] {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  width: 100%;
+}
+input[type="text"] {
+  height: 10px; /* 高さを強制 */
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  width: 100%;
+}
 
     textarea {
       resize: vertical;
@@ -83,3 +91,4 @@
 .form-wrapper {
   position: relative;
 }
+
