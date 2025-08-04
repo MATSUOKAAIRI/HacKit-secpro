@@ -21,16 +21,21 @@ const rankingSection = document.querySelector(".ranking");
 // ページのクエリパラメータから「place」を取得----------------------------
 const urlParams = new URLSearchParams(window.location.search);
 const placeFilter = urlParams.get("place");
+console.log("placeFilter:", placeFilter);
 
-if (!placeFilter) {
-  rankingSection.innerHTML = "<p>号館が指定されていません。</p>";
-} else {
+
   fetchBuildingRankings(placeFilter);
-}//placeFilterのチェック------
+//placeFilterのチェック------
 
 async function fetchBuildingRankings(place) {
   const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
-  const querySnapshot = await getDocs(q);//クエリを作っている---------------
+ try {
+    const querySnapshot = await getDocs(q);
+    console.log("取得件数:", querySnapshot.size);
+    // ここで値が0なら、コレクションが空かフィルターで除外されている
+  } catch (error) {
+    console.error("Firestore取得エラー:", error);
+  }//クエリを作っている---------------
 
     rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;//rankingにh2を書く
 
@@ -41,8 +46,8 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   // ユーザー状態が変わったらランキングを再読み込み
-  fetchRankings();
-});
+    fetchRankings(place, document.getElementById("categoryFilter").value, currentUser);
+  });
 
 // 共感ボタンの状態を更新する関数
 function updateEmpathyButton(button, hasEmpathized, empathyCount) {
@@ -58,7 +63,7 @@ function updateEmpathyButton(button, hasEmpathized, empathyCount) {
 }
 
 // ① fetchRankings関数の定義
-async function fetchRankings(categoryFilter = "") {
+async function fetchRankings(place, categoryFilter = "", currentUser) { 
   const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
   const querySnapshot = await getDocs(q);
 
@@ -70,10 +75,7 @@ async function fetchRankings(categoryFilter = "") {
 
         if (data.place !== place) return;//あってなければスキップ---
 
-    // ② フィルター条件に合わないものはスキップ
-    if (categoryFilter && data.category !== categoryFilter) {
-      return;
-    }
+
 
     // 現在のユーザーが既に共感しているかチェック
     const hasEmpathized = currentUser && empathizedUsers.includes(currentUser.uid);
@@ -192,17 +194,13 @@ item.addEventListener("click", (e) => {
   }
 }
 
-// ③ セレクトボックスにイベントを付ける（fetchRankingsを呼ぶ）
-document.getElementById("categoryFilter").addEventListener("change", () => {
-  const cat = document.getElementById("categoryFilter").value;
-  const place = document.getElementById("placeFilter").value;
-  fetchRankings(cat, place);
-});
 
+/*
 document.getElementById("placeFilter").addEventListener("change", () => {
   const cat = document.getElementById("categoryFilter").value;
   const place = document.getElementById("placeFilter").value;
   fetchRankings(cat, place);
-});
+});*/
 }
+
 
