@@ -35,16 +35,50 @@ import { getFirestore, collection, getDocs, query } from "https://www.gstatic.co
 
 // --- DOM要素の取得 ---
 const categoryButtons = document.querySelectorAll('.category-filters .category-button');
+const areas = document.querySelectorAll('map[name="campus-map"] area');
 
+// --- ページ読み込み完了後のメイン処理 ---
+document.addEventListener('DOMContentLoaded', () => {
+    // 機能1：ピンの表示/非表示イベントを設定
+    setupPinHoverEvents();
+
+    // 機能2：初期表示として「すべて」のヒートマップを表示
+    updateHeatmap('all');
+});
+
+
+/**
+ * 機能1：ピンの表示/非表示機能をセットアップする関数
+ */
+function setupPinHoverEvents() {
+    areas.forEach(area => {
+        // マウスがareaに入った時
+        area.addEventListener('mouseover', () => {
+            const pinId = area.dataset.pinId;
+            if (pinId) {
+                const pin = document.getElementById(pinId);
+                if (pin) pin.classList.add('is-visible');
+            }
+        });
+        // マウスがareaから出た時
+        area.addEventListener('mouseout', () => {
+            const pinId = area.dataset.pinId;
+            if (pinId) {
+                const pin = document.getElementById(pinId);
+                if (pin) pin.classList.remove('is-visible');
+            }
+        });
+    });
+}
 // db繋ぎこみ確認のため定義
 
 let db = null;
 
 
-/**
- * Firestoreからデータを取得し、スコアを計算してヒートマップを更新するメイン関数
- * @param {string} category - 表示するカテゴリ名 ('all' または '施設/設備' など)
- */
+// /**
+//  * Firestoreからデータを取得し、スコアを計算してヒートマップを更新するメイン関数
+//  * @param {string} category - 表示するカテゴリ名 ('all' または '施設/設備' など)
+//  */
 async function updateHeatmap(category = 'all') {
     try {
         // サーバーから環境変数を取得して設定を更新
@@ -70,7 +104,7 @@ async function updateHeatmap(category = 'all') {
         console.log("querySnapshot", querySnapshot)
        
 
-        const scores = [];
+        //const scores = [];
         const datas = [];
     querySnapshot.forEach(doc => {
         const data = doc.data();
@@ -216,7 +250,22 @@ console.log("24号館のempathy数:", twentfourempty);
 console.log("27号館のempathy数:", twentysevwnempty);
 console.log("その他のempathy数:", otherempty);
 
-        // 計算したスコアを基に、ヒートマップの見た目を更新
+//         // 計算したスコアを基に、ヒートマップの見た目を更新
+let scoresone = 0;
+let scorestwo = 0;
+let scoresthree = 0;
+let scoresfive = 0;
+let scoressix = 0;
+let scoresosix = 0;
+let scoresseven = 0;
+let scoreseight = 0;
+let scorestwelve = 0;
+let scores21 = 0;
+let scores23 = 0;
+let scores24 = 0;
+let scores27 = 0;
+let scoresother = 0;
+
         renderHeatmap(scores);
 
     } catch (error) {

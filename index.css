@@ -161,6 +161,26 @@
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
+/* === マップピン === */
+.map-pin{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background-color: #FF4136;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    transform: translate(-50%,-50%);
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.map-pin.is-visible {
+    opacity: 1; 
+}
+
 /* === ハザードマップのデモ表示 === */
 .hazard-overlay {
     position: absolute;

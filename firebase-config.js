@@ -1,11 +1,13 @@
 // Firebase SDKを読み込み
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged as firebaseOnAuthStateChanged, createUserWithEmailAndPassword as firebaseCreateUser, signInWithEmailAndPassword as firebaseSignIn, updatePassword as firebaseUpdatePassword, sendPasswordResetEmail as firebaseSendPasswordResetEmail, confirmPasswordReset as firebaseConfirmPasswordReset, signOut as firebaseSignOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {getFirestore,collection,doc,getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 let firebaseConfig = null;
 let app = null;
 let auth = null;
 let isInitialized = false;
+let db = null;
 
 async function loadFirebaseConfig() {
   try {
@@ -79,6 +81,7 @@ async function loadFirebaseConfig() {
     // Firebaseを初期化
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
+    db = getFirestore(app);
     isInitialized = true;
     
     console.log('Firebase初期化完了');
@@ -92,6 +95,7 @@ async function loadFirebaseConfig() {
 loadFirebaseConfig();
 
 export { firebaseConfig, initializeApp, getAuth };
+export { db, getFirestore,collection,doc,getDoc }
 
 export function validateFirebaseConfig(config) {
   const requiredFields = ['apiKey', 'authDomain', 'projectId'];
