@@ -27,10 +27,9 @@ class AuthClient {
       const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
       const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
       const { getFirestore } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
-      
-      // Firebaseを初期化
+
       this.app = initializeApp({
-        apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg", // 公開APIキー
+        apiKey: config.apiKey, // サーバーから動的に取得
         authDomain: config.authDomain,
         projectId: config.projectId,
         storageBucket: config.storageBucket,
@@ -80,6 +79,9 @@ class AuthClient {
   async getFirebaseConfig() {
     try {
       const response = await fetch(`${this.baseURL}/api/firebase-config`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const config = await response.json();
       console.log('📋 Firebase設定を取得:', {
         authDomain: config.authDomain,
@@ -88,15 +90,7 @@ class AuthClient {
       return config;
     } catch (error) {
       console.error('Firebase設定の取得に失敗:', error);
-      // フォールバック設定
-      return {
-        authDomain: "hackit-d394f.firebaseapp.com",
-        projectId: "hackit-d394f",
-        storageBucket: "hackit-d394f.firebasestorage.app",
-        messagingSenderId: "73269710558",
-        appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-        measurementId: "G-4MBQ6S9SDC"
-      };
+      throw new Error('Firebase設定の取得に失敗しました。サーバーに接続できません。');
     }
   }
 

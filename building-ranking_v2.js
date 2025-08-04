@@ -19,7 +19,26 @@ async function initializeFirebase() {
   }
 }
 
-fetchBuildingRankings(placeFilter);
+// 認証状態の初期化を待ってからランキングを取得
+async function initializeRanking() {
+  try {
+    // 認証状態の初期化を待機
+    await authStateManager.waitForInitialization();
+    
+    // 現在のユーザーを取得
+    const currentUser = await authClient.getCurrentUser();
+    console.log('building-ranking_v2.js - 初期化完了:', currentUser ? 'ログイン済み' : '未ログイン');
+    
+    // ランキングを取得
+    await fetchBuildingRankings(placeFilter);
+  } catch (error) {
+    console.error('building-ranking_v2.js - 初期化エラー:', error);
+    // エラーが発生してもランキングを取得
+    await fetchBuildingRankings(placeFilter);
+  }
+}
+
+initializeRanking();
 //placeFilterのチェック------
 
 async function fetchBuildingRankings(place) {
@@ -40,7 +59,9 @@ async function fetchBuildingRankings(place) {
 
   rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;//rankingにh2を書く
 
-  let currentUser = null;
+  // 現在のユーザーを取得
+  let currentUser = await authClient.getCurrentUser();
+  console.log('building-ranking_v2.js - 現在のユーザー:', currentUser ? 'ログイン済み' : '未ログイン');
 
   // 認証状態の監視
   authStateManager.addListener((user) => {
@@ -177,7 +198,7 @@ async function fetchBuildingRankings(place) {
   }
 
   // 初期表示
-  await fetchRankings(place, "", null);
+  await fetchRankings(place, "", currentUser);
 }
 
 
