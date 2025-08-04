@@ -6,6 +6,7 @@
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     position: relative;
+    font-family: 'Noto Sans JP', 'Segoe UI', sans-serif;
 }
 
 .site-header .logo {
@@ -35,7 +36,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI", sans-serif;
+    font-family: 'Noto Sans JP', 'Segoe UI', sans-serif;
     background-color: #f0f0f0;
     height: 100vh;
     display: flex;
@@ -168,4 +169,12 @@ input[type="submit"]:hover {
     h1 {
         font-size: 20px;
     }
+}
+
+body {
+  font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  background: #f5f8ff;
+  margin: 0;
+  padding: 0;
+  color: #333;
 }

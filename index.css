@@ -217,6 +217,13 @@
     filter: blur(25px);
 }
 
+footer{
+    text-align: center;
+  padding: 1em;
+  background: #e0ecff;
+  font-size: 0.9em;
+  color: #555;
+}
 .hazard-area-2 {
     top: 60%;
     left: 10%;
@@ -309,6 +316,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: "Segoe UI", sans-serif;
-  background-color: #eef6ff;
+  background-color: #f5f8ff;
   min-height: 100vh;
 }
