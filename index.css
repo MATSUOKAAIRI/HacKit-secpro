@@ -67,7 +67,7 @@
 }
 
 .password-change-link:hover {
-    background-color: #f8f9fa;
+    background-color: #ffffff;
 }
 
 .logout-link {
@@ -265,6 +265,50 @@
     background: linear-gradient(135deg, #2ecc40, #72d97e);
 }
 
-.cat-human {
+.cat-4 {
     background: linear-gradient(135deg, #0074d9, #54a0e3);
+}
+
+.cat-5 {
+    background: linear-gradient(135deg, #00ffc8, #61fffa);
+    color: #333;
+}
+
+.cat-6 {
+    background: linear-gradient(135deg, #c72ecc, #d072d9);
+}
+
+.cat-7 {
+    background: linear-gradient(135deg, #d90082, #e35499);
+}
+.usage-box {
+    border: 2px solid #ccc;
+    padding: 16px;
+    margin: 24px auto;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.usage-title {
+    margin-top: 0;
+    font-size: 1.3em;
+    color: #333;
+    font-weight: bold;
+}
+
+.map-description {
+    font-size: 1.05em;
+    color: #555;
+    line-height: 1.6;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #eef6ff;
+  min-height: 100vh;
 }

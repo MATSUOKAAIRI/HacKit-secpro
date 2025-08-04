@@ -8,6 +8,8 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+  <!-- 例: Noto Sans JP を読み込む -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <div class="form-wrapper">
@@ -19,8 +21,11 @@
         <label for="type">意見の種類：</label>
         <select id="type" name="type" required>
           <option value="">選択してください</option>
-          <option value="施設/設備">施設/設備</option>
+          <option value="施設">施設</option>
           <option value="授業">授業</option>
+          <option value="人間関係">人間関係</option>
+          <option value="職員">職員</option>
+          <option value="回線">回線</option>
           <option value="その他">その他</option>
         </select>
       </div>
@@ -43,6 +48,7 @@
           <option value="24号館">24号館</option>
           <option value="26号館">26号館</option>
           <option value="27号館">27号館</option>
+          <option value="その他">その他</option>
         </select>
       </div>
       
