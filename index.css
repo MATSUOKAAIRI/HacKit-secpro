@@ -308,3 +308,16 @@ body {
     pointer-events: none; /* クリックを透過させる */
     transition: opacity 0.5s ease-in-out; /* ふわっと変化するアニメーション */
 }
+
+/* ヒートマップ濃度を10段階で切り替えるクラス */
+.hazard-opacity-0 { opacity: 0; }
+.hazard-opacity-1 { opacity: 0.1; }
+.hazard-opacity-2 { opacity: 0.2; }
+.hazard-opacity-3 { opacity: 0.3; }
+.hazard-opacity-4 { opacity: 0.4; }
+.hazard-opacity-5 { opacity: 0.5; }
+.hazard-opacity-6 { opacity: 0.6; }
+.hazard-opacity-7 { opacity: 0.7; }
+.hazard-opacity-8 { opacity: 0.8; }
+.hazard-opacity-9 { opacity: 0.9; }
+.hazard-opacity-10 { opacity: 1; }

@@ -104,7 +104,7 @@ async function updateHeatmap(category = 'all') {
         console.log("querySnapshot", querySnapshot)
        
 
-        //const scores = [];
+        const scores = [];
         const datas = [];
     querySnapshot.forEach(doc => {
         const data = doc.data();
@@ -266,12 +266,64 @@ let scores24 = 0;
 let scores27 = 0;
 let scoresother = 0;
 
+scoresone = one * oneempty;
+// class名の取得　getOpacityClass(scoresone) 
+
+//クラスを追加　どこへidかkurasu
+scorestwo = two * twoempty;
+scoresthree = three * threeempty;
+scoresfive = five * fiveempty;
+scoressix = six * sixempty;
+scoresosix = osix * osixempty;
+scoresseven = seven * sevenempty;
+scoreseight = eight * eightempty;
+scorestwelve = twelve * twelveempty;
+scores21 = twntyone * twntyoneempty;
+scores23 = twenythree * twenythreeempty;
+scores24 = twentfour * twentfourempty;
+scores27 = twentysevwn * twentysevwnempty;
+scoresother = other * otherempty;
+
+//if文で主分けしてｃｓｓの箱にいれる
+
+// if scoresone ==0
+
         renderHeatmap(scores);
+
+const judgeHeatmapOpacity = (score) => {
+    // スコアを 0 ～ 10 の範囲に正規化
+    // 最大スコアを 300 と仮定
+    const maxScore = 250;
+    const normalizedScore = Math.floor((score  /  maxScore) *10) 
+    return normalizedScore;
+}
+
+const getOpacityClass = (score) => {
+    const opacity = judgeHeatmapOpacity(score);
+    return `hazard-opacity-${Math.round(opacity)}`;
+}
+
+// 各建物のヒートマップのopacityを設定
+document.getElementById('hazard-bldg1').classList.add(getOpacityClass(scoresone));
+document.getElementById('hazard-bldg2').classList.add(getOpacityClass(scorestwo));
+document.getElementById('hazard-bldg3').classList.add(getOpacityClass(scoresthree));
+document.getElementById('hazard-bldg5').classList.add(getOpacityClass(scoresfive));
+document.getElementById('hazard-bldg6-lc').classList.add(getOpacityClass(scoressix));
+document.getElementById('hazard-bldg6-hall').classList.add(getOpacityClass(scoresosix));
+document.getElementById('hazard-bldg7').classList.add(getOpacityClass(scoresseven));
+document.getElementById('hazard-bldg8').classList.add(getOpacityClass(scoreseight));
+document.getElementById('hazard-bldg12').classList.add(getOpacityClass(scorestwelve));
+document.getElementById('hazard-bldg21').classList.add(getOpacityClass(scores21));
+document.getElementById('hazard-bldg23').classList.add(getOpacityClass(scores23));
+document.getElementById('hazard-bldg24').classList.add(getOpacityClass(scores24));
+document.getElementById('hazard-bldg27').classList.add(getOpacityClass(scores27));
+
 
     } catch (error) {
         console.error("ヒートマップデータの取得に失敗しました:", error);
     }
 }
+
 
 
 /**
