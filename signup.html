@@ -10,12 +10,17 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
 </head>
 <body>
-    <div class="signup-container">
-        <div class="logo">
-            <h1>新規登録</h1>
-            <p>アカウントを作成して始めましょう</p>
-        </div>
+    <header class="site-header">
+        <div class="logo">KIT不満箱</div>
+        <h1 class="catchphrase">あなたの声が大学を変える！！</h1>      
+        <div class="header-actions"></div>
+    </header>
 
+    <div class="form-wrapper">
+        <div class="close-button" onclick="history.back()">×</div>
+        <h1>新規登録</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">アカウントを作成して始めましょう</p>
+        
         <form id="signupForm">
             <div class="form-group">
                 <label for="email">メールアドレス</label>
@@ -34,12 +39,10 @@
                 <input type="password" id="confirmPassword" name="confirmPassword" placeholder="パスワードを再入力" required>
                 <div class="error-message" id="confirmPasswordError">パスワードが一致しません</div>
             </div>
-            <button type="submit" class="signup-btn" id="signupBtn">
-                アカウント作成
-            </button>
+            <input type="submit" value="アカウント作成" class="signup-btn" id="signupBtn">
         </form>
 
-        <div class="login-link">
+        <div class="signup-link">
             すでにアカウントをお持ちの方は <a href="login.html">ログイン</a>
         </div>
     </div>

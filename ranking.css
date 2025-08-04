@@ -273,6 +273,10 @@ footer {
   gap: 10px;
 }
 
+.instruction{
+  margin: 2.0ch;
+}
+
 .details {
     max-width: 100%; /* 横に広がらないよう制限 */
   word-break: break-word; /* 長い単語でも折り返す */

@@ -18,14 +18,36 @@ const auth = getAuth(app);
 
 const rankingSection = document.querySelector(".ranking");
 
+// ページのクエリパラメータから「place」を取得----------------------------
+const urlParams = new URLSearchParams(window.location.search);
+const placeFilter = urlParams.get("place");
+console.log("placeFilter:", placeFilter);
+
+
+  fetchBuildingRankings(placeFilter);
+//placeFilterのチェック------
+
+async function fetchBuildingRankings(place) {
+  const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
+ try {
+    const querySnapshot = await getDocs(q);
+    console.log("取得件数:", querySnapshot.size);
+    // ここで値が0なら、コレクションが空かフィルターで除外されている
+  } catch (error) {
+    console.error("Firestore取得エラー:", error);
+  }//クエリを作っている---------------
+
+    rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;//rankingにh2を書く
+
+
 let currentUser = null;
 
 // 認証状態の監視
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
   // ユーザー状態が変わったらランキングを再読み込み
-  fetchRankings();
-});
+    fetchRankings(place, document.getElementById("categoryFilter").value, currentUser);
+  });
 
 // 共感ボタンの状態を更新する関数
 function updateEmpathyButton(button, hasEmpathized, empathyCount) {
@@ -41,22 +63,19 @@ function updateEmpathyButton(button, hasEmpathized, empathyCount) {
 }
 
 // ① fetchRankings関数の定義
-async function fetchRankings(categoryFilter = "", placeFilter = "") {
+async function fetchRankings(place, categoryFilter = "", currentUser) { 
   const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
   const querySnapshot = await getDocs(q);
 
-  rankingSection.innerHTML = ""; // ← 前の表示を消す
 
   let rank = 1;
   querySnapshot.forEach((docSnapshot) => {
     const data = docSnapshot.data();
     const empathizedUsers = data.empathizedUsers || []; // 共感したユーザーIDの配列
 
-    // ② フィルター条件に合わないものはスキップ
-    if ((categoryFilter && data.category !== categoryFilter) ||
-        (placeFilter && data.place !== placeFilter)) {
-      return;
-    }
+        if (data.place !== place) return;//あってなければスキップ---
+
+
 
     // 現在のユーザーが既に共感しているかチェック
     const hasEmpathized = currentUser && empathizedUsers.includes(currentUser.uid);
@@ -170,20 +189,18 @@ item.addEventListener("click", (e) => {
 
     rank++;
   });
+    if (rank === 1) {
+    rankingSection.innerHTML += `<p>この号館にはまだ投稿がありません。</p>`;
+  }
 }
 
-// ③ セレクトボックスにイベントを付ける（fetchRankingsを呼ぶ）
-document.getElementById("categoryFilter").addEventListener("change", () => {
-  const cat = document.getElementById("categoryFilter").value;
-  const place = document.getElementById("placeFilter").value;
-  fetchRankings(cat, place);
-});
 
+/*
 document.getElementById("placeFilter").addEventListener("change", () => {
   const cat = document.getElementById("categoryFilter").value;
   const place = document.getElementById("placeFilter").value;
   fetchRankings(cat, place);
-});
+});*/
+}
 
-// 初回読み込み
-fetchRankings();
+

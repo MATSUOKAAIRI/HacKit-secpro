@@ -65,6 +65,7 @@
 }
 .password-change-link:hover {
     background-color: #F8F9FA;
+
 }
 .logout-link {
     color: #DC3545;
@@ -176,6 +177,15 @@
     background-color: red;
     filter: blur(25px);
 }
+
+footer{
+    text-align: center;
+  padding: 1em;
+  background: #e0ecff;
+  font-size: 0.9em;
+  color: #555;
+}
+
 .hazard-area-2 {
     top: 60%;
     left: 10%;

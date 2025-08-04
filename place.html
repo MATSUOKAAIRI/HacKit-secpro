@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ヘッダーのサンプル</title>
-    <link rel="stylesheet" href="index.css">
+    <title>KIT不満箱</title>
+    <link rel="stylesheet" href="ranking.css">
 </head>
 <body>
 
     <header class="site-header">
-        <div class="logo">KIT不満箱</div>
+      <div class="logo">
+        <a href="index.html">KIT不満箱</a>
+        </div>
 
         <h1 class="catchphrase">あなたの声が大学を変える！！</h1>
 
@@ -24,22 +26,29 @@
                     <span class="bar"></span>
                 </button>
                 <ul class="nav-menu" id="nav-menu">
-                    <li><a href="/HacKit-secpro/index.html">ホーム</a></li>
-                    <li><a href="/HacKit-secpro/ranking.html">ランキング</a></li>
-                    <li id="auth-menu-item">
-                        <a href="/HacKit-secpro/login.html" id="auth-link">ログイン</a>
-                    </li>
-                </ul>
+                  <li><a href="index.html">ホーム</a></li>
+                  <li><a href="ranking.html">ランキング</a></li>
+                  <li id="auth-menu-item">
+                      <a href="login.html" id="auth-link">ログイン</a>
+                  </li>
+              </ul>
             </div>
 
         </div>
         </header>
-<head>
-  <meta charset="UTF-8">
-  <title>6号館/LCの不満ランキング</title>
-  <link rel="stylesheet" href="ranking.css">
-</head>
 <body>
+
+  <div class="filter-controls">
+  <select id="categoryFilter">
+    <option value="">すべてのカテゴリ</option>
+          <option value="施設">施設</option>
+          <option value="授業">授業</option>
+          <option value="人間関係">人間関係</option>
+          <option value="職員">職員</option>
+          <option value="回線">回線</option>
+          <option value="その他">その他</option>
+  </select>
+  </div>
 
 <main>
   <section class="ranking">
@@ -47,16 +56,12 @@
   </section>
 </main>
 
-<footer>
-  <p>&copy; 2025 大学の不満箱プロジェクト</p>
-</footer>
-
 <!-- JSで place=1号館 を渡す -->
 <script type="module">
-  import './building-ranking.js';
+  import './building-ranking_v2.js';
 </script>
 <script>
-  history.replaceState(null, "", "?place=6号館/LC");
+  history.replaceState(null, "", "");
             // JavaScriptでハンバーガーメニューのクリックイベントを処理
         const hamburgerButton = document.getElementById('hamburger-button');
         const navMenu = document.getElementById('nav-menu');
