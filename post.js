@@ -1,41 +1,38 @@
-// Firebase設定と認証機能をインポート
-import { onAuthStateChanged, getCurrentUser } from './firebase-config.js';
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// Firebase Automation機能を活用した投稿ページ
+import { authClient, authStateManager } from './auth-client.js';
 
 let currentUser = null;
-let db = null;
 
 // 認証状態の監視
 async function initializePostApp() {
   try {
-    console.log('Firebase初期化を開始します...');
+    console.log('投稿ページの初期化を開始します...');
     
-    // Firestoreを取得
-    db = getFirestore();
-    console.log('Firestore初期化完了');
+    // Firebaseを初期化
+    await authClient.initializeFirebase();
     
     // 認証状態を監視
-    onAuthStateChanged((user) => {
+    authStateManager.addListener((user) => {
       currentUser = user;
       console.log('認証状態が変更されました:', user ? 'ログイン済み' : '未ログイン');
     });
     
     // 現在のユーザーを取得
-    currentUser = await getCurrentUser();
+    currentUser = await authClient.getCurrentUser();
     console.log('現在のユーザー:', currentUser);
     
   } catch (error) {
-    console.error('Firebase初期化でエラーが発生しました:', error);
-    alert('Firebaseの初期化に失敗しました。ページを再読み込みしてください。');
+    console.error('投稿ページ初期化でエラーが発生しました:', error);
+    alert('投稿ページの初期化に失敗しました。ページを再読み込みしてください。');
   }
 }
 
 // フォーム送信処理
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    console.log('DOM読み込み完了、Firebase初期化を開始...');
+    console.log('DOM読み込み完了、投稿ページ初期化を開始...');
     
-    // Firebaseを初期化
+    // 投稿ページを初期化
     await initializePostApp();
     
     const form = document.querySelector("form");
@@ -69,22 +66,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       try {
-        console.log('Firestoreに投稿を追加中...');
-        const docRef = await addDoc(collection(db, "opinion"), {
+        console.log('Firestoreに直接投稿を送信中...');
+        const result = await authClient.createPost({
           title,
           details,
           category,
-          place,
-          empathy: 0,
-          userId: currentUser.uid,
-          createdAt: new Date()
+          place
         });
 
-        console.log('投稿が成功しました:', docRef.id);
-        alert("ご意見を受け付けました！");
-        setTimeout(() => {
-          window.location.href = "index.html";
-        }, 2000);
+        if (result.success) {
+          console.log('投稿が成功しました:', result.postId);
+          alert("ご意見を受け付けました！");
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 2000);
+        } else {
+          console.error("投稿エラー:", result.error);
+          alert("送信に失敗しました: " + result.error);
+        }
       } catch (error) {
         console.error("送信エラー:", error);
         alert("送信に失敗しました。もう一度お試しください。");

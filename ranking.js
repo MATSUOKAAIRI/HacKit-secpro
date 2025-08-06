@@ -1,28 +1,13 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc, increment, arrayUnion, arrayRemove} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
-  authDomain: "hackit-d394f.firebaseapp.com",
-  projectId: "hackit-d394f",
-  storageBucket: "hackit-d394f.firebasestorage.app",
-  messagingSenderId: "73269710558",
-  appId: "1:73269710558:web:97c3f0061dd8bc72ecbc4f",
-  measurementId: "G-4MBQ6S9SDC"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+import { authClient, authStateManager } from './auth-client.js';
 
 const rankingSection = document.querySelector(".ranking");
 
 let currentUser = null;
 
 // 認証状態の監視
-onAuthStateChanged(auth, (user) => {
+authStateManager.addListener((user) => {
   currentUser = user;
+  console.log('ranking.js - 認証状態変更:', user ? `ログイン済み (${user.email})` : '未ログイン');
   // ユーザー状態が変わったらランキングを再読み込み
   fetchRankings();
 });
@@ -42,14 +27,23 @@ function updateEmpathyButton(button, hasEmpathized, empathyCount) {
 
 // ① fetchRankings関数の定義
 async function fetchRankings(categoryFilter = "", placeFilter = "") {
-  const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
-  const querySnapshot = await getDocs(q);
+  try {
+    // authClientを使用してFirestoreにアクセス
+    const result = await authClient.getPosts();
+    if (!result.success) {
+      console.error('投稿取得エラー:', result.error);
+      return;
+    }
+    
+    const posts = result.posts;
+    // 共感数でソート
+    posts.sort((a, b) => (b.empathy || 0) - (a.empathy || 0));
 
   rankingSection.innerHTML = ""; // ← 前の表示を消す
 
   let rank = 1;
-  querySnapshot.forEach((docSnapshot) => {
-    const data = docSnapshot.data();
+  posts.forEach((post) => {
+    const data = post;
     const empathizedUsers = data.empathizedUsers || []; // 共感したユーザーIDの配列
 
     // ② フィルター条件に合わないものはスキップ
@@ -77,7 +71,7 @@ item.innerHTML = `
     </div>
   </div>
   <div class="votes-container">
-    <button class="empathy-btn" data-id="${docSnapshot.id}" ${!currentUser ? 'disabled' : ''}>
+    <button class="empathy-btn" data-id="${post.id}" ${!currentUser ? 'disabled' : ''}>
       ${!currentUser ? 'ログインが必要' : (hasEmpathized ? '共感済み' : '共感する')}
     </button>
     <span class="votes"><span class="empathy-count">${data.empathy}</span></span>
@@ -146,21 +140,22 @@ item.addEventListener("click", (e) => {
       }
 
       try {
-        const docRef = doc(db, "opinion", empathyBtn.dataset.id);
-        await updateDoc(docRef, {
-          empathy: increment(1),
-          empathizedUsers: arrayUnion(currentUser.uid)
-        });
+        // authClientを使用して共感を追加
+        const result = await authClient.addEmpathy(empathyBtn.dataset.id);
         
-        // ボタンの状態を更新
-        empathyBtn.textContent = "共感済み";
-        empathyBtn.classList.add("empathized");
-        empathyBtn.disabled = true;
-        
-        // カウントを更新
-        const empathyCountElem = item.querySelector(".empathy-count");
-        const current = parseInt(empathyCountElem.textContent);
-        empathyCountElem.textContent = current + 1;
+        if (result.success) {
+          // ボタンの状態を更新
+          empathyBtn.textContent = "共感済み";
+          empathyBtn.classList.add("empathized");
+          empathyBtn.disabled = true;
+          
+          // カウントを更新
+          const empathyCountElem = item.querySelector(".empathy-count");
+          const current = parseInt(empathyCountElem.textContent);
+          empathyCountElem.textContent = current + 1;
+        } else {
+          alert("共感の処理に失敗しました");
+        }
         
       } catch (error) {
         console.error("共感エラー:", error);
@@ -170,6 +165,9 @@ item.addEventListener("click", (e) => {
 
     rank++;
   });
+  } catch (error) {
+    console.error('ランキング取得エラー:', error);
+  }
 }
 
 // ③ セレクトボックスにイベントを付ける（fetchRankingsを呼ぶ）
@@ -185,5 +183,7 @@ document.getElementById("placeFilter").addEventListener("change", () => {
   fetchRankings(cat, place);
 });
 
-// 初回読み込み
-fetchRankings();
+// 初期化が完了してから初回読み込み
+authStateManager.waitForInitialization().then(() => {
+  fetchRankings();
+});

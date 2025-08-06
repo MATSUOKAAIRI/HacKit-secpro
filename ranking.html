@@ -14,102 +14,101 @@
 <body>
 
     <header class="site-header">
-        <div class="logo">
+      <div class="logo">
         <a href="index.html">KIT不満箱</a>
+      </div>
+      <h1 class="catchphrase">あなたの声が大学を変える！！</h1>
+
+      <div class="header-actions">
+        <a href="post.html" class="post-button">投稿</a>
+
+        <div class="hamburger-menu">
+          <button class="hamburger-button" id="hamburger-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </button>
+          <ul class="nav-menu" id="nav-menu">
+            <li><a href="index.html">ホーム</a></li>
+            <li><a href="ranking.html">ランキング</a></li>
+            <li id="auth-menu-item">
+              <a href="login.html" id="auth-link">ログイン</a>
+            </li>
+          </ul>
         </div>
-        <h1 class="catchphrase">あなたの声が大学を変える！！</h1>
-
-        <div class="header-actions">
-
-            <a href="post.html" class="post-button">投稿</a>
-            
-            <div class="hamburger-menu">
-                <button class="hamburger-button" id="hamburger-button">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </button>
-                <ul class="nav-menu" id="nav-menu">
-                    <li><a href="index.html">ホーム</a></li>
-                    <li><a href="ranking.html">ランキング</a></li>
-                    <li id="auth-menu-item">
-                        <a href="login.html" id="auth-link">ログイン</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-        </header>
+      </div>
+    </header>
 
     <script>
-        // JavaScriptでハンバーガーメニューのクリックイベントを処理
-        const hamburgerButton = document.getElementById('hamburger-button');
-        const navMenu = document.getElementById('nav-menu');
+      // JavaScriptでハンバーガーメニューのクリックイベントを処理
+      const hamburgerButton = document.getElementById("hamburger-button");
+      const navMenu = document.getElementById("nav-menu");
 
-        hamburgerButton.addEventListener('click', () => {
-            // is-activeクラスを付けたり外したりする
-            navMenu.classList.toggle('is-active');
-        });
+      hamburgerButton.addEventListener("click", () => {
+        // is-activeクラスを付けたり外したりする
+        navMenu.classList.toggle("is-active");
+      });
     </script>
 
-<div class="filter-controls">
-  <select id="categoryFilter">
-    <option value="">すべてのカテゴリ</option>
-          <option value="施設">施設</option>
-          <option value="授業">授業</option>
-          <option value="人間関係">人間関係</option>
-          <option value="職員">職員</option>
-          <option value="回線">回線</option>
-          <option value="その他">その他</option>
-  </select>
+    <div class="filter-controls">
+      <select id="categoryFilter">
+        <option value="">すべてのカテゴリ</option>
+        <option value="施設">施設</option>
+        <option value="授業">授業</option>
+        <option value="人間関係">人間関係</option>
+        <option value="職員">職員</option>
+        <option value="回線">回線</option>
+        <option value="その他">その他</option>
+      </select>
 
-  <select id="placeFilter">
+      <select id="placeFilter">
         <option value="">すべての場所</option>
-          <option value="1号館">1号館</option>
-          <option value="2号館">2号館</option>
-          <option value="3号館">3号館</option>
-          <option value="5号館">5号館</option>
-          <option value="6号館/ホール">6号館/ホール</option>
-          <option value="6号館/LC">6号館/LC</option>
-          <option value="7号館">7号館</option>
-          <option value="8号館">8号館</option>
-          <option value="12号館">12号館</option>
-          <option value="21号館">21号館</option>
-          <option value="23号館">23号館</option>
-          <option value="24号館">24号館</option>
-          <option value="27号館">27号館</option>
-          <option value="その他">その他</option>
-  </select>
-</div>
+        <option value="1号館">1号館</option>
+        <option value="2号館">2号館</option>
+        <option value="3号館">3号館</option>
+        <option value="5号館">5号館</option>
+        <option value="6号館">6号館</option>
+        <option value="6号館/LC">6号館/LC</option>
+        <option value="7号館">7号館</option>
+        <option value="8号館">8号館</option>
+        <option value="12号館">12号館</option>
+        <option value="21号館">21号館</option>
+        <option value="23号館">23号館</option>
+        <option value="24号館">24号館</option>
+        <option value="27号館">27号館</option>
+        <option value="その他">その他</option>
+      </select>
+    </div>
 
-  <main>
-    <section class="ranking">
-      <!-- Firebaseから読み込まれた投稿がここに追加される -->
-    </section>
-  </main>
+    <main>
+      <section class="ranking">
+        <!-- Firebaseから読み込まれた投稿がここに追加される -->
+      </section>
+    </main>
 
-  <footer>
-    <p>&copy; 2025 大学の不満箱プロジェクト</p>
-  </footer>
+    <footer>
+      <p>&copy; 2025 大学の不満箱プロジェクト</p>
+    </footer>
 
-  <!-- Cloudflare Pages環境変数を読み込み -->
-  <script>
+    <!-- Cloudflare Pages環境変数を読み込み -->
+    <script>
       // Cloudflare Pagesの環境変数をwindowオブジェクトに設定
-      window.FIREBASE_API_KEY = '{{ FIREBASE_API_KEY }}';
-      window.FIREBASE_AUTH_DOMAIN = '{{ FIREBASE_AUTH_DOMAIN }}';
-      window.FIREBASE_PROJECT_ID = '{{ FIREBASE_PROJECT_ID }}';
-      window.FIREBASE_STORAGE_BUCKET = '{{ FIREBASE_STORAGE_BUCKET }}';
-      window.FIREBASE_MESSAGING_SENDER_ID = '{{ FIREBASE_MESSAGING_SENDER_ID }}';
-      window.FIREBASE_APP_ID = '{{ FIREBASE_APP_ID }}';
-      window.FIREBASE_MEASUREMENT_ID = '{{ FIREBASE_MEASUREMENT_ID }}';
-  </script>
-  
-  <!-- Firebase設定と認証機能 -->
-  <script type="module" src="firebase-config.js"></script>
-  <script type="module" src="auth-header.js"></script>
-  <script type="module" src="post-button-control.js"></script>
-  
-  <!-- JavaScriptを読み込む（モジュールとして） -->
-  <script type="module" src="./ranking.js"></script>
-</body>
+      window.FIREBASE_API_KEY = "{{ FIREBASE_API_KEY }}";
+      window.FIREBASE_AUTH_DOMAIN = "{{ FIREBASE_AUTH_DOMAIN }}";
+      window.FIREBASE_PROJECT_ID = "{{ FIREBASE_PROJECT_ID }}";
+      window.FIREBASE_STORAGE_BUCKET = "{{ FIREBASE_STORAGE_BUCKET }}";
+      window.FIREBASE_MESSAGING_SENDER_ID =
+        "{{ FIREBASE_MESSAGING_SENDER_ID }}";
+      window.FIREBASE_APP_ID = "{{ FIREBASE_APP_ID }}";
+      window.FIREBASE_MEASUREMENT_ID = "{{ FIREBASE_MEASUREMENT_ID }}";
+    </script>
+
+    <!-- Firebase設定と認証機能 -->
+    <script type="module" src="auth-client.js"></script>
+    <script type="module" src="auth-header.js"></script>
+    <script type="module" src="post-button-control.js"></script>
+
+    <!-- JavaScriptを読み込む（モジュールとして） -->
+    <script type="module" src="./ranking.js"></script>
+  </body>
 </html>

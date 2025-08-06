@@ -1,4 +1,4 @@
-import { sendPasswordResetEmail, getErrorMessage } from './firebase-config.js';
+import { authClient } from './auth-client.js';
 
 document.addEventListener('DOMContentLoaded', function() {
     const passwordResetForm = document.getElementById('passwordResetForm');
@@ -51,15 +51,15 @@ document.addEventListener('DOMContentLoaded', function() {
             resetBtn.textContent = '送信中...';
 
             try {
-                const result = await sendPasswordResetEmail(email);
+                // Firebaseを初期化
+                await authClient.initializeFirebase();
                 
-                if (result.success) {
-                    alert('パスワードリセットメールを送信しました。\nメールをご確認ください。\n\n送信先: ' + email);
-                    passwordResetForm.reset();
-                } else {
-                    const errorMessage = getErrorMessage(result.error);
-                    alert('メール送信に失敗しました: ' + errorMessage);
-                }
+                // パスワードリセットメールを送信
+                const { sendPasswordResetEmail } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+                
+                await sendPasswordResetEmail(authClient.auth, email);
+                alert('パスワードリセットメールを送信しました。\nメールをご確認ください ');
+                passwordResetForm.reset();
             } catch (error) {
                 console.error('メール送信エラー:', error);
                 alert('メール送信に失敗しました。ネットワーク接続を確認してください。');

@@ -51,12 +51,13 @@ input[type="submit"] {
   width: 100%;
 }
 input[type="text"] {
-  height: 10px; /* 高さを強制 */
+  height: 40px; /* 高さを適切なサイズに修正 */
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
   box-sizing: border-box;
   width: 100%;
+  padding: 10px;
 }
 
     textarea {

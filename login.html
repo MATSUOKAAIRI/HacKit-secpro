@@ -18,8 +18,7 @@
 
     <div class="form-wrapper">
         <div class="close-button" onclick="history.back()">×</div>
-        <h1>ログインする</h1>
-        
+        <h1>ログイン</h1>
         <form id="loginForm">
             <div class="form-group">
                 <label for="email">メールアドレス</label>
@@ -36,29 +35,15 @@
             <input type="submit" value="ログイン" class="login-btn" id="loginBtn">
         </form>
 
-        <div class="forgot-password">
-            <a href="password-reset.html">パスワードを忘れた場合</a>
-        </div>
-
         <div class="signup-link">
-            アカウントをお持ちでない方は <a href="signup.html">新規登録</a>
+            <a href="signup.html">アカウントを作成</a>
+            <span style="margin: 0 10px;">|</span>
+            <a href="password-reset.html">パスワードを忘れた方</a>
         </div>
     </div>
-
-    <!-- Cloudflare Pages環境変数を読み込み -->
-    <script>
-        // Cloudflare Pagesの環境変数をwindowオブジェクトに設定
-        window.FIREBASE_API_KEY = '{{ FIREBASE_API_KEY }}';
-        window.FIREBASE_AUTH_DOMAIN = '{{ FIREBASE_AUTH_DOMAIN }}';
-        window.FIREBASE_PROJECT_ID = '{{ FIREBASE_PROJECT_ID }}';
-        window.FIREBASE_STORAGE_BUCKET = '{{ FIREBASE_STORAGE_BUCKET }}';
-        window.FIREBASE_MESSAGING_SENDER_ID = '{{ FIREBASE_MESSAGING_SENDER_ID }}';
-        window.FIREBASE_APP_ID = '{{ FIREBASE_APP_ID }}';
-        window.FIREBASE_MEASUREMENT_ID = '{{ FIREBASE_MEASUREMENT_ID }}';
-    </script>
     
     <!-- Firebase設定とログイン機能 -->
-    <script type="module" src="firebase-config.js"></script>
+    <script type="module" src="auth-client.js"></script>
     <script type="module" src="login.js"></script>
 </body>
 </html>
