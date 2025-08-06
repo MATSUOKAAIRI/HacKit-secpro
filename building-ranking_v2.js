@@ -1,6 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc, increment, arrayUnion, arrayRemove} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, orderBy, doc, updateDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// --- ▼ ここからデバッグログ ▼ ---
+console.log("【1】 building-ranking_v2.js が読み込まれました。");
+// --- ▲ ここまでデバッグログ ▲ ---
 
 const firebaseConfig = {
   apiKey: "AIzaSyDJ4wJ3YUbXFfvmQdsBVDyd8TZBfmIn3Eg",
@@ -17,150 +21,120 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 const rankingSection = document.querySelector(".ranking");
-
-// ページのクエリパラメータから「place」を取得----------------------------
 const urlParams = new URLSearchParams(window.location.search);
 const placeFilter = urlParams.get("place");
-console.log("placeFilter:", placeFilter);
-
-
-  fetchBuildingRankings(placeFilter);
-//placeFilterのチェック------
-
-async function fetchBuildingRankings(place) {
-  const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
- try {
-    const querySnapshot = await getDocs(q);
-    console.log("取得件数:", querySnapshot.size);
-    // ここで値が0なら、コレクションが空かフィルターで除外されている
-  } catch (error) {
-    console.error("Firestore取得エラー:", error);
-  }//クエリを作っている---------------
-
-    rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;//rankingにh2を書く
-
-
 let currentUser = null;
 
-// 認証状態の監視
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-  // ユーザー状態が変わったらランキングを再読み込み
-    fetchRankings(place, document.getElementById("categoryFilter").value, currentUser);
-  });
+// --- ▼ ここからデバッグログ ▼ ---
+console.log("【2】 URLから取得した場所:", placeFilter);
+// --- ▲ ここまでデバッグログ ▲ ---
 
-// 共感ボタンの状態を更新する関数
-function updateEmpathyButton(button, hasEmpathized, empathyCount) {
-  if (hasEmpathized) {
-    button.textContent = "共感済み";
-    button.classList.add("empathized");
-    button.disabled = true;
-  } else {
-    button.textContent = "共感する";
-    button.classList.remove("empathized");
-    button.disabled = false;
+async function fetchBuildingRankings(place, category) {
+  // --- ▼ ここからデバッグログ ▼ ---
+  console.log("【4】 fetchBuildingRankingsが実行されました。");
+  console.log("    引数 Place:", place);
+  console.log("    引数 Category:", category);
+  // --- ▲ ここまでデバッグログ ▲ ---
+
+  if (!place) {
+    rankingSection.innerHTML = "<p>表示する建物を指定してください。</p>";
+    return;
   }
-}
 
-// ① fetchRankings関数の定義
-async function fetchRankings(place, categoryFilter = "", currentUser) { 
   const q = query(collection(db, "opinion"), orderBy("empathy", "desc"));
   const querySnapshot = await getDocs(q);
 
+  // --- ▼ ここからデバッグログ ▼ ---
+  console.log(`【5】 Firestoreから ${querySnapshot.size} 件のデータを取得しました。`);
+  // --- ▲ ここまでデバッグログ ▲ ---
+
+  rankingSection.innerHTML = `<h2>📍 ${place} の不満ランキング</h2>`;
 
   let rank = 1;
+  let displayedCount = 0; // フィルター後に表示された件数をカウント
+
   querySnapshot.forEach((docSnapshot) => {
     const data = docSnapshot.data();
-    const empathizedUsers = data.empathizedUsers || []; // 共感したユーザーIDの配列
+    
+    // 最初の1件だけ中身をログに出力してみる
+    if (rank === 1 && displayedCount === 0) {
+        // --- ▼ ここからデバッグログ ▼ ---
+        console.log("【6】 取得した最初の1件のデータ内容:", data);
+        // --- ▲ ここまでデバッグログ ▲ ---
+    }
+    
+    // フィルター条件
+    if (data.place !== place) return;
+    if (category && data.category !== category) return;
+    
+    displayedCount++; // 表示件数をインクリメント
 
-        if (data.place !== place) return;//あってなければスキップ---
+    const hasEmpathized = currentUser && data.empathizedUsers && data.empathizedUsers.includes(currentUser.uid);
+    
+    const item = document.createElement("div");
+    item.className = "ranking-item";
+    
+    // HTML構築（テンプレートリテラル）
+    item.innerHTML = `
+      <div class="overview">
+        <span class="rank">${rank}位</span>
+        <div class="content">
+          <p class="summary">${data.title}</p>
+          <div class="meta">
+            <span class="category">#${data.category}</span>
+            <span class="place">📍${data.place}</span>
+          </div>
+        </div>
+        <div class="votes-container">
+          <button class="empathy-btn" data-id="${docSnapshot.id}" ${!currentUser ? 'disabled' : ''}>
+            ${!currentUser ? 'ログインが必要' : (hasEmpathized ? '共感済み' : '共感する')}
+          </button>
+          <span class="votes"><span class="empathy-count">${data.empathy}</span></span>
+        </div>
+      </div>
+      <div class="instruction">↓詳細を表示</div>
+    `;
 
-
-
-    // 現在のユーザーが既に共感しているかチェック
-    const hasEmpathized = currentUser && empathizedUsers.includes(currentUser.uid);
-
-    // 以下ランキング表示部分はそのまま
-const item = document.createElement("div");
-item.className = "ranking-item";
-
-// HTML構築（テンプレートリテラル）
-item.innerHTML = `
-<div class="overview">
-  <span class="rank">${rank}位</span>
-  <div class="content">
-    <p class="summary">${data.title}</p>
-    <div class="meta">
-      <span class="category">#${data.category}</span>
-      <span class="place">📍${data.place}</span>
-    </div>
-  </div>
-  <div class="votes-container">
-    <button class="empathy-btn" data-id="${docSnapshot.id}" ${!currentUser ? 'disabled' : ''}>
-      ${!currentUser ? 'ログインが必要' : (hasEmpathized ? '共感済み' : '共感する')}
-    </button>
-    <span class="votes"><span class="empathy-count">${data.empathy}</span></span>
-  </div>
-</div>
-<div class="instruction">↓詳細を表示</div>
-`;
-
-item.addEventListener("click", (e) => {
-  if (e.target.closest(".empathy-btn")) return;
-
-  const content = item.querySelector(".content");
-
-  // すでに表示中の詳細要素がある場合は削除
-  const existing = item.querySelector(".details-inside");
-  if (existing) {
-    existing.remove();
-    return; // 再クリックで閉じる
-  }
-
-  // 内部に表示する詳細要素を作成
-  const details = document.createElement("div");
-  details.className = "details-inside";
-  details.innerText = data.details;
-
-  // スタイルを付ける（ここでCSSでも可能）
-  details.style.marginTop = "0.75em";
-  details.style.padding = "0.8em";
-  details.style.background = "#f9f9f9";
-  details.style.borderRadius = "10px";
-  details.style.boxShadow = "0 0 10px rgba(0,0,0,0.06)";
-  details.style.lineHeight = "1.5";
-  details.style.whiteSpace = "pre-wrap";
-  details.style.width = "100%";
-  details.style.boxSizing = "border-box";
-  details.style.overflowWrap = "break-word";
-
-  // .ranking-itemの直後に挿入
-  item.insertAdjacentElement('beforeend', details);
-});
-
-
+    // 詳細表示のクリックイベント
+    item.addEventListener("click", (e) => {
+      if (e.target.closest(".empathy-btn")) return;
+      const existing = item.querySelector(".details-inside");
+      if (existing) {
+        existing.remove();
+        return;
+      }
+      const details = document.createElement("div");
+      details.className = "details-inside";
+      details.innerText = data.details;
+      // 詳細表示のスタイル設定
+      details.style.marginTop = "0.75em";
+      details.style.padding = "0.8em";
+      details.style.background = "#f9f9f9";
+      details.style.borderRadius = "10px";
+      details.style.boxShadow = "0 0 10px rgba(0,0,0,0.06)";
+      details.style.lineHeight = "1.5";
+      details.style.whiteSpace = "pre-wrap";
+      details.style.width = "100%";
+      details.style.boxSizing = "border-box";
+      details.style.overflowWrap = "break-word";
+      item.insertAdjacentElement('beforeend', details);
+    });
 
     rankingSection.appendChild(item);
 
+    // 共感ボタンの処理
     const empathyBtn = item.querySelector(".empathy-btn");
-    
-    // ログインしていない場合はボタンを無効化
     if (!currentUser) {
       empathyBtn.disabled = true;
-      empathyBtn.classList.add("disabled");
     } else if (hasEmpathized) {
+      empathyBtn.textContent = "共感済み";
       empathyBtn.classList.add("empathized");
       empathyBtn.disabled = true;
     }
 
     empathyBtn.addEventListener("click", async () => {
-      if (!currentUser) {
-        alert("ログインが必要です");
-        return;
-      }
-
-      if (hasEmpathized) {
-        alert("既に共感済みです");
+      if (!currentUser || empathyBtn.classList.contains("empathized")) {
+        alert(!currentUser ? "ログインが必要です" : "既に共感済みです");
         return;
       }
 
@@ -170,37 +144,43 @@ item.addEventListener("click", (e) => {
           empathy: increment(1),
           empathizedUsers: arrayUnion(currentUser.uid)
         });
-        
-        // ボタンの状態を更新
+
         empathyBtn.textContent = "共感済み";
         empathyBtn.classList.add("empathized");
         empathyBtn.disabled = true;
         
-        // カウントを更新
-        const empathyCountElem = item.querySelector(".empathy-count");
-        const current = parseInt(empathyCountElem.textContent);
-        empathyCountElem.textContent = current + 1;
-        
+        const countElem = item.querySelector(".empathy-count");
+        countElem.textContent = parseInt(countElem.textContent) + 1;
       } catch (error) {
         console.error("共感エラー:", error);
         alert("共感の処理に失敗しました");
       }
     });
-
+    
     rank++;
   });
-    if (rank === 1) {
-    rankingSection.innerHTML += `<p>この号館にはまだ投稿がありません。</p>`;
+
+  // --- ▼ ここからデバッグログ ▼ ---
+  console.log(`【7】 フィルター後、${displayedCount} 件が表示されました。`);
+  // --- ▲ ここまでデバッグログ ▲ ---
+
+  if (displayedCount === 0) {
+    rankingSection.innerHTML += `<p>この場所・カテゴリにはまだ投稿がありません。</p>`;
   }
 }
 
+document.getElementById("categoryFilter").addEventListener("change", (e) => {
+  const selectedCategory = e.target.value;
+  fetchBuildingRankings(placeFilter, selectedCategory);
+});
 
-/*
-document.getElementById("placeFilter").addEventListener("change", () => {
-  const cat = document.getElementById("categoryFilter").value;
-  const place = document.getElementById("placeFilter").value;
-  fetchRankings(cat, place);
-});*/
-}
+onAuthStateChanged(auth, (user) => {
+  currentUser = user;
+  
+  // --- ▼ ここからデバッグログ ▼ ---
+  console.log("【3】 認証状態が確認されました。 currentUser:", currentUser ? currentUser.uid : "未ログイン");
+  // --- ▲ ここまでデバッグログ ▲ ---
 
-
+  const initialCategory = document.getElementById("categoryFilter").value;
+  fetchBuildingRankings(placeFilter, initialCategory);
+});

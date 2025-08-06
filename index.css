@@ -1,4 +1,5 @@
 
+
         /* ヘッダー全体のスタイル */
 .site-header {
     display: flex;
@@ -39,45 +40,50 @@
     gap: 16px; /* ボタンとメニューの間の隙間 */
 }
 
-
- .user-menu {
+.user-menu {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 8px;
 }
+
 .user-email {
     font-size: 0.9em;
     color: #666;
     font-weight: 500;
 }
+
 .user-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: stretch;
 }
+
 .password-change-link {
-    color: #007BFF;
+    color: #007bff;
     text-decoration: none;
     padding: 10px 0;
     transition: background-color 0.2s;
 }
-.password-change-link:hover {
-    background-color: #F8F9FA;
 
+.password-change-link:hover {
+    background-color: #ffffff;
 }
+
 .logout-link {
-    color: #DC3545;
+    color: #dc3545;
     text-decoration: none;
     padding: 10px 0;
     cursor: pointer;
     margin: 0;
     transition: background-color 0.2s;
 }
+
 .logout-link:hover {
-    background-color: #F8F9FA;
+    background-color: #f8f9fa;
 }
+
         /* ハンバーガーボタンのスタイル */
         .hamburger-button {
             width: 40px;
@@ -90,12 +96,14 @@
             flex-direction: column;
             justify-content: space-around;
         }
+
         .hamburger-button .bar {
             width: 100%;
             height: 3px;
             background-color: #333;
             display: block;
         }
+
         /* ハンバーガーメニュー（押した後に表示されるリスト）のスタイル */
         .nav-menu {
             display: none; /* 最初は隠しておく */
@@ -103,26 +111,30 @@
             top: 100%; /* ヘッダーの真下に表示 */
             right: 50px; /* 右端から20pxの位置に */
             background-color: #fff;
-            border: 1px solid #E7E7E7;
+            border: 1px solid #e7e7e7;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             list-style: none;
             padding: 10px 0;
             margin: 0;
             z-index: 100;
         }
+
         /* is-activeクラスが付いたら表示する */
         .nav-menu.is-active {
             display: block;
         }
+
         .nav-menu li a {
             display: block;
             padding: 10px 30px;
             text-decoration: none;
             color: #333;
         }
+
         .nav-menu li a:hover {
-            background-color: #0AD1EC;
+            background-color: #0ad1ec;
         }
+
         /* 丸い投稿ボタンのスタイル */
 .post-button {
     display: flex;
@@ -132,7 +144,7 @@
     height: 50px;
     margin-right: 30px; /* ハンバーガーボタンとの余白（少し調整） */
     /* margin-top: 20px; ← この行を削除します */
-    background-color: #007BFF;
+    background-color: #007bff;
     color: white;
     border-radius: 50%;
     text-decoration: none;
@@ -140,6 +152,7 @@
     font-size: 14px;
     transition: background-color 0.2s;
 }
+
 /*main */
 /* === メインコンテンツのレイアウト === */
 .page-container {
@@ -149,12 +162,14 @@
     padding: 40px;
     gap: 32px; /* カテゴリとマップの間の隙間 */
 }
+
 /* === マップエリア === */
 .map-area {
     position: relative;
     max-width: 700px;
     flex-shrink: 0;
 }
+
 .campus-map-image {
     width: 100%;
     height: auto;
@@ -162,6 +177,30 @@
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
+
+/* === マップピン === */
+.map-pin {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background-color: #ff4136;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+    transform: translate(-50%, -50%); /* Center the pin on the coordinate */
+    
+    /* Hide the pin by default */
+    opacity: 0;
+    pointer-events: none; /* Make the pin non-interactive */
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Class to make the pin visible */
+.map-pin.is-visible {
+    opacity: 1;
+}
+
+
 /* === ハザードマップのデモ表示 === */
 .hazard-overlay {
     position: absolute;
@@ -169,6 +208,7 @@
     opacity: 0.3;
     pointer-events: none;
 }
+
 .hazard-area-1 {
     top: 25%;
     left: 45%;
@@ -185,7 +225,6 @@ footer{
   font-size: 0.9em;
   color: #555;
 }
-
 .hazard-area-2 {
     top: 60%;
     left: 10%;
@@ -194,6 +233,7 @@ footer{
     background-color: orange;
     filter: blur(20px);
 }
+
 /* === カテゴリ選択エリア === */
 .category-filters {
     display: flex;
@@ -201,6 +241,7 @@ footer{
     justify-content: center; /* ボタンを中央に寄せる */
     gap: 20px; /* ボタン同士の隙間 */
 }
+
 .category-button {
     display: block;
     padding: 15px 40px;
@@ -212,32 +253,70 @@ footer{
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
 }
+
 .category-button:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 /* カテゴリごとの色 */
 .cat-all {
-    background: linear-gradient(135deg, #FF4136, #FF7470);
-}
-.cat-facility {
-    background: linear-gradient(135deg, #FFDC00, #FFEA61);
-    color: #333;
-}
-.cat-class {
-    background: linear-gradient(135deg, #2ECC40, #72D97E);
-}
-.cat-human {
-    background: linear-gradient(135deg, #0074D9, #54A0E3);
+    background: linear-gradient(135deg, #ff4136, #ff7470);
 }
 
-/* === ハザードマップの表示 === */
-.hazard-overlay {
-    position: absolute;
-    background-color: red;
-    border-radius: 50%;
-    filter: blur(20px); /* 色をぼかす */
-    opacity: 0; /* 初期状態は透明 */
-    pointer-events: none; /* クリックを透過させる */
-    transition: opacity 0.5s ease-in-out; /* ふわっと変化するアニメーション */
+.cat-facility {
+    background: linear-gradient(135deg, #ffdc00, #ffea61);
+    color: #333;
+}
+
+.cat-class {
+    background: linear-gradient(135deg, #2ecc40, #72d97e);
+}
+
+.cat-4 {
+    background: linear-gradient(135deg, #0074d9, #54a0e3);
+}
+
+.cat-5 {
+    background: linear-gradient(135deg, #00ffc8, #61fffa);
+    color: #333;
+}
+
+.cat-6 {
+    background: linear-gradient(135deg, #c72ecc, #d072d9);
+}
+
+.cat-7 {
+    background: linear-gradient(135deg, #d90082, #e35499);
+}
+.usage-box {
+    border: 2px solid #ccc;
+    padding: 16px;
+    margin: 24px auto;
+    max-width: 600px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.usage-title {
+    margin-top: 0;
+    font-size: 1.3em;
+    color: #333;
+    font-weight: bold;
+}
+
+.map-description {
+    font-size: 1.05em;
+    color: #555;
+    line-height: 1.6;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f5f8ff;
+  min-height: 100vh;
 }
